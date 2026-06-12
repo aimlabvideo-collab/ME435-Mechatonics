@@ -254,64 +254,62 @@ $$\frac{di}{dt} = \frac{V}{L_1} + \frac{V}{L_2} = V\left(\frac{1}{L_1} + \frac{1
 **Problem.** Compute $V_{out}$ and $I_{out}$ for the circuit with
 $R_1=1,\ R_2=2,\ R_3=3,\ R_4=4,\ R_5=5,\ R_6=6\ \text{k}\Omega$, $V_1=10\ \text{V}$, $V_2=20\ \text{V}$.
 
-### Step 0 — Read the circuit
+We solve it the way we do in class: **shrink the resistor network step by step, redraw, then apply KVL loop by loop.**
 
-Label three useful nodes (all voltages referenced to ground):
+### Step 1 — Collapse the resistor network, one piece at a time
 
-- **Node A** — top of $R_1$, bottom of $R_2$, left end of $R_3$, and the **+** terminal of $V_1$. $I_{out}$ is the current leaving node A to the left, into $R_1$.
-- **Node B** — right end of $R_3$, bottom of $R_4$, tops of $R_5$ and $R_6$. This is the **output node**, so $V_{out}=V_B$.
-- **Rail D** — bottoms of $R_5$ and $R_6$, tied to the **+** terminal of $V_2$.
+**Top path.** $R_2$ and $R_4$ sit in series along the top:
 
-The two sources are *ideal*, so they pin their nodes regardless of the rest of the circuit:
+$$R_{24} = R_2 + R_4 = 2 + 4 = 6\ \text{k}\Omega$$
 
-$$V_A = V_1 = 10\ \text{V}, \qquad V_D = V_2 = 20\ \text{V}$$
+**That top path is in parallel with $R_3$:**
 
-### Step 1 — $I_{out}$ comes for free
+$$R_{234} = R_{24}\parallel R_3 = \frac{R_{24}\cdot R_3}{R_{24}+R_3} = \frac{6\cdot 3}{6+3} = \frac{18}{9} = 2\ \text{k}\Omega$$
 
-$R_1$ sits directly between node A (10 V) and ground, in parallel with the ideal source $V_1$. So its current is fixed by $V_1$ alone:
+**On the right, $R_5$ and $R_6$ are in parallel:**
 
-$$\boxed{I_{out} = \frac{V_1}{R_1} = \frac{10\ \text{V}}{1\ \text{k}\Omega} = 10\ \text{mA}}$$
+$$R_{56} = R_5\parallel R_6 = \frac{R_5\cdot R_6}{R_5+R_6} = \frac{5\cdot 6}{5+6} = \frac{30}{11}\approx 2.7\ \text{k}\Omega$$
 
-(Because $R_1$ is in parallel with an ideal source, it draws this current independently of everything else — the rest of the network doesn't change it.)
+Now the whole circuit collapses into something simple: on the **left** a loop with $V_1$ (10 V) and $R_1$; across the **top** the block $R_{234}$ with $V_{out}$ on its right side; on the **right** the block $R_{56}$; and $V_2$ (20 V) closing the bottom. Two clean loops.
 
-### Step 2 — Reduce the network to find $V_{out}$
+### Step 2 — Loop 1 (left loop) → $I_{out}$
 
-Everything else lives between the two fixed nodes A (10 V) and D (20 V), with the output node B in the middle.
+The left loop is just $V_1$ driving $R_1$. KVL around it:
 
-**Between A and B** there are two parallel paths:
+$$\sum V = 0:\quad V_1 - I_1 R_1 = 0 \;\Rightarrow\; 10 = I_1\ (1000)$$
 
-- the top path $R_2$ then $R_4$ in series: $R_2+R_4 = 2+4 = 6\ \text{k}\Omega$
-- the direct path $R_3 = 3\ \text{k}\Omega$
+$$\boxed{I_{out} = I_1 = \frac{10}{1000} = 0.01\ \text{A} = 10\ \text{mA}}$$
 
-$$R_{AB} = (R_2+R_4)\parallel R_3 = \frac{6\cdot 3}{6+3} = 2\ \text{k}\Omega$$
+That's it for $I_{out}$ — the left loop stands alone.
 
-**Between B and D**, $R_5$ and $R_6$ share the same two nodes (parallel):
+### Step 3 — Loop 2 (right loop) → the loop current
 
-$$R_{BD} = R_5\parallel R_6 = \frac{5\cdot 6}{5+6} = \frac{30}{11}\approx 2.73\ \text{k}\Omega$$
+Assume a current $I_{56}$ circulating around the right loop and write KVL. Going around the loop, $V_1$ is a rise, the two resistor blocks are drops, and $V_2$ opposes us:
 
-### Step 3 — Node B is a divider between two sources
+$$10 - V_{234} - V_{56} - 20 = 0$$
 
-Node B is fed only from A (through $R_{AB}$) and from D (through $R_{BD}$). KCL at B says the current in from one side equals the current out the other:
+Replace each resistor voltage with Ohm's law ($V = I_{56}R$):
 
-$$\frac{V_B - V_A}{R_{AB}} + \frac{V_B - V_D}{R_{BD}} = 0$$
+$$10 - I_{56}R_{234} - I_{56}R_{56} - 20 = 0$$
 
-Solving for $V_B$ gives the two-source (conductance-weighted) divider:
+$$I_{56}\ (R_{234} + R_{56}) = -10 \;\Rightarrow\; I_{56} = \frac{-10}{2 + 2.7} = \frac{-10}{4.7\ \text{k}\Omega} \approx -2.1\ \text{mA}$$
 
-$$V_{out}=V_B=\frac{\dfrac{V_A}{R_{AB}}+\dfrac{V_D}{R_{BD}}}{\dfrac{1}{R_{AB}}+\dfrac{1}{R_{BD}}}
-=\frac{\dfrac{10}{2}+\dfrac{20}{30/11}}{\dfrac{1}{2}+\dfrac{11}{30}}
-=\frac{5+\tfrac{220}{30}}{\tfrac{26}{30}}=\frac{370}{26}$$
+> ⚠️ **Notice the minus sign — this is the lesson from §4.3 in action.**
+> We *guessed* the current direction, and the negative result is the circuit telling us our guess was backwards: the real current flows the **other way**, with magnitude about 2.1 mA. We don't redo anything — the sign carries the correction. (This makes sense physically: the 20 V source is stronger than the 10 V source, so it pushes current "upstream" against our assumed arrow.)
 
-$$\boxed{V_{out}\approx 14.23\ \text{V}}$$
+### Step 4 — $V_{out}$
 
-### Step 4 — Sanity check (current directions)
+$V_{out}$ is the voltage at the node on the right of $R_{234}$. Walk from the 10 V node through $R_{234}$ to that node:
 
-Since $V_D=20\ \text{V} > V_{out}=14.23\ \text{V} > V_A=10\ \text{V}$, current flows **from D, into node B, then out to A** — the higher source pushes toward the lower one. The branch current is
+$$V_{out} = 10 - V_{234} = 10 - I_{56}R_{234} = 10 - (-2.1\ \text{mA})(2\ \text{k}\Omega) = 10 + 4.2$$
 
-$$I = \frac{V_D-V_B}{R_{BD}} = \frac{20-14.23}{30/11}\ \text{k}\Omega \approx 2.12\ \text{mA},$$
+$$\boxed{V_{out} \approx 14.2\ \text{V}}$$
 
-and the same 2.12 mA leaves B toward A through $R_{AB}$, so KCL at B balances. ✓
+*(Using the exact $R_{56} = \tfrac{30}{11}\ \text{k}\Omega$ instead of the rounded 2.7 gives $V_{out} = \tfrac{370}{26} = 14.23\ \text{V}$ — the small difference is just rounding.)*
 
-> **Takeaway.** When an ideal source sits directly across a node, it *fixes* that node's voltage — use that to decouple the problem (here $I_{out}$ fell out immediately). What's left is almost always a series/parallel reduction plus one divider step.
+### The intuition
+
+$V_{out}$ ends up **higher than 10 V** because it sits between a 10 V source and a stronger 20 V source — the 20 V side pulls the node up above 10 V. And $I_{out}$ was easy because the left loop is independent: $V_1$ sits right across $R_1$, so $I_{out} = V_1/R_1$ with no other algebra needed.
 
 ---
 
