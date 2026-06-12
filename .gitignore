@@ -1,20 +1,26 @@
 # --- Protect private / sensitive material from being pushed ---
-# Student records (FERPA), copyrighted textbook, exam & quiz answer keys.
-# These patterns are a safety net; the best protection is to simply not
-# copy these files into this folder.
+# Best protection is simply NOT copying these files into this folder.
+# The patterns below are a safety net. They are intentionally SPECIFIC so they
+# don't catch legitimate words like "example", "upgrade", or "finalize".
 
-*Grade*
-*grade*
-*Solution*
-*solution*
-*answer*
-*Answer*
-*Exam*
-*Midterm*
-*Final*
-*Quiz*
+# Student records (FERPA) — folders
+Grade/
+Grades/
+
+# Copyrighted textbook
 Textbook/
 Introduction-to-Mechatronics*.pdf
+
+# Exam / quiz / solution materials (word-boundary patterns, not bare substrings)
+*answer-key*
+*answer_key*
+*[Ss]olution[s]?.*
+*-[Ss]olution*
+*_[Ss]olution*
+ME435_*Exam*
+*Midterm*
+*Final-Exam*
+*[Qq]uiz-*
 
 # OS / editor junk
 .DS_Store
