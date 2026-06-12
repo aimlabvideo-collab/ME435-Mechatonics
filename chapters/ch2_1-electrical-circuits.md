@@ -4,258 +4,124 @@ parent: Chapters
 nav_order: 2
 ---
 
-# Chapter 2.1 — Electrical Circuits and Components
+# Chapter 2.1 — Going Deeper
 
-> ME 435 · Mechatronics — Self-study companion notes.
-> **Read these alongside the lecture slides.** The slides carry the figures, graphs, and circuit schematics; these notes carry the explanations and the *derivations* — the "where does this equation come from" reasoning we work through in class.
-
-## Learning Objectives
-
-By the end of this chapter you should be able to:
-
-- Explain voltage, current, and resistance, and why circuit analysis reduces to finding $V$ and $I$.
-- Derive and use the voltage–current relationship of each passive element (resistor, capacitor, inductor).
-- Apply **Ohm's law** and **Kirchhoff's voltage/current laws (KVL/KCL)**.
-- Derive the equivalent element for series and parallel combinations of R, C, and L.
+> ME 435 · Mechatronics — **Extra-depth notes.**
+> These notes go *beyond* the lecture. In class we don't have time to chase down every "why," so this page does it for you. Each section starts with a one-line reminder of the in-class point (*In class:* …), then digs into the reasoning, physics, and practical consequences we had to skip.
+>
+> *Assumes you've seen the slides and know basic calculus. Keep the slides handy for the figures.*
 
 ---
 
-## 1. The Big Picture: It's All About $V$ and $I$
+## 1. Current: What's Actually Moving?
 
-Analyzing a circuit ultimately comes down to finding two quantities: **voltage ($V$)** and **current ($I$)**. Understanding any mechatronic system means knowing these two values throughout its circuits.
+*In class:* current is the flow of charge, $I = dq/dt$, and conventional current runs from **+** to **−**.
 
-The single idea that ties this whole chapter together:
+**The part we skip — electrons barely move.** Here's something surprising. When you flip a switch and a light turns on "instantly," the electrons in the wire are *not* racing from the switch to the bulb. In a copper wire carrying an ordinary current, the average electron **drift velocity** is on the order of a fraction of a millimeter per second — slower than a snail.
 
-> **Every circuit element defines its own relationship between $V$ and $I$.**
-> The resistor, capacitor, and inductor each have a *different* _V_–_I_ relationship — and that relationship *is* what the element "is." Once you know an element's _V_–_I_ rule, you can plug it into Kirchhoff's laws and solve any circuit.
+So how does the bulb light up immediately? Because what propagates near the speed of light is the **electric field**, not the electrons themselves. The field tells *every* electron in the wire to start drifting almost at once — like a tube already full of water: push one end and water comes out the other end immediately, even though no single water molecule traveled the whole length.
 
-| Quantity | Symbol | Unit | Meaning |
-|----------|:------:|:----:|---------|
-| Voltage | $V$ | volt (V) | Potential difference between two points — the "push" |
-| Current | $I$ | ampere (A) | Flow of electric charge |
-| Resistance | $R$ | ohm ($\Omega$) | Opposition to current flow |
-
-**DC vs. AC:**
-- **DC** — voltage and current are constant in time (e.g., a battery).
-- **AC** — voltage and current vary with time (e.g., a wall outlet).
+> ⚠️ **Misconception — current direction.**
+> Conventional current flows **+** → **−**, but in a metal the **electrons (negative)** drift the *opposite* way. The convention was fixed in the 1700s before electrons were understood, and we kept it. **Positive charges don't move — electrons do.** (None of your circuit math changes; it's just a labeling convention.)
 
 ---
 
-## 2. The Circuit: Source and Load
+## 2. Resistor: Why "Ideal" Is a Lie (a Useful One)
 
-- **Voltage source** — provides energy to the circuit (battery, power supply, generator). Conventional current flows from the **+** terminal, through the circuit, back to the **−** terminal.
-- **Load** — a network of elements that *dissipates* or *stores* electrical energy (e.g., a bulb, or a system doing useful work).
+*In class:* a resistor obeys $V = IR$, a straight line, and dissipates energy as heat.
 
-> ⚠️ **Key misconception — current direction.**
-> By historical convention, *conventional current* flows from **+** to **−**. But in a metal wire it is the **electrons (negative charge)** that actually move — in the *opposite* direction. The convention was fixed in the 1700s, before electrons were understood, and we still keep it today.
-> **Positive charges do not move — electrons do.**
+**Where resistance physically comes from.** A metal is a lattice of fixed ions with free electrons drifting through it. As electrons drift, they **scatter** off the vibrating lattice — each collision transfers energy to the lattice as heat. That scattering *is* resistance. This picture explains the formula $R = \rho L/A$: more length means more lattice to scatter through; more area means more parallel paths for electrons.
 
----
+**Why real resistors aren't straight lines.**
+- **Temperature.** Heat the metal and the lattice vibrates harder → more scattering → resistance *rises*. So a real resistor's _V_–_I_ line bends as it heats under load. (Semiconductors do the *opposite*: heat frees more charge carriers, so their resistance *drops* — which is why thermistors work.)
+- **Power rating.** Every real resistor has a wattage limit. Past it, $V=IR$ still holds right up until the part overheats and changes value or fails. The "ideal" linear line assumes you never get there.
 
-## 3. The Three Basic Passive Elements
-
-There are three basic **passive** elements, each defined by its own _V_–_I_ relationship:
-
-| Element | Symbol | Role | Energy |
-|---------|:------:|------|--------|
-| **Resistor** | $R$ | Converts electrical energy to heat | Dissipates |
-| **Capacitor** | $C$ | Builds an **electric** field between plates | Stores |
-| **Inductor** | $L$ | Builds a **magnetic** field around a coil | Stores |
-
-The three sections below each follow the same pattern: *what it is → its _V_–_I_ relationship → where that relationship comes from.*
+> The takeaway: $V=IR$ is an *empirical, approximate* law for a specific operating range — not a fundamental law of nature like charge conservation. It's astonishingly good for the conditions we use resistors in, which is why we lean on it.
 
 ---
 
-### 3.1 Resistor
+## 3. Capacitor: How Does "Current" Cross a Gap That Blocks It?
 
-A resistor is a **dissipative** element that converts electrical energy into heat. Unit: ohm ($\Omega$).
+*In class:* $i = C dv/dt$; a capacitor blocks DC and passes AC; it stores energy in an electric field.
 
-**Ohm's law** — the _V_–_I_ relationship of an ideal resistor:
+**The puzzle.** The two plates are separated by an **insulator** (dielectric). No electron ever crosses the gap. So how can an ammeter read a steady "current through" the capacitor while it charges?
 
-$$V = I R$$
+**The resolution.** Nothing crosses the gap. What happens is: electrons pile onto one plate and are pulled *off* the other plate, through the external wires. From outside, the wires carry a real current; *inside* the gap, no charge moves — instead a **changing electric field** builds between the plates. Maxwell named this changing-field term the **displacement current**, and it's exactly what "completes" the circuit so current continuity is never violated. (You'll meet displacement current by name in electromagnetics; here, just know the gap is bridged by a *field*, not by charge.)
 
-For an *ideal* resistor, $V$ and $I$ are perfectly **linear**: a straight line through the origin with slope $R$. Real resistors deviate from this — for example, resistance drifts with temperature, so the line bends at high power.
-*(See the "Real vs. Ideal" _V_–_I_ graph on the slides.)*
+**Why this gives "blocks DC, passes AC" for free.** Look at $i = C dv/dt$:
+- **DC** → voltage is constant → $dv/dt = 0$ → $i = 0$. The field is already built and static, nothing flows. **Open circuit.**
+- **AC** → voltage keeps changing → $dv/dt \neq 0$ → current keeps flowing as the field is repeatedly built and torn down. The faster the signal, the more it passes.
 
-**Resistivity — why resistance depends on the wire itself.** Resistance is not just a number you pick; it comes from material and geometry:
+**Where the energy lives, and how much.** The stored energy sits in the electric field between the plates. You can derive the amount by integrating the power $vi$ as it charges:
 
-$$R = \frac{\rho L}{A}$$
+$$W = \int v i dt = \int v \left(C\frac{dv}{dt}\right) dt = \int_0^V C v dv = \tfrac{1}{2}CV^2$$
 
-- $\rho$ — the material's **resistivity** (intrinsic property)
-- $L$ — length of the wire → longer means electrons travel through more material → **more** resistance
-- $A$ — cross-sectional area → thicker wire gives charge more room to flow → **less** resistance
-
-> Silver has the lowest resistivity, with copper close behind. Because copper is far cheaper, it is the most common material for real wiring — a balance of **conductivity and cost**.
-
-**Reading color bands** (standard 4-band resistor) — *see the color chart on the slides:*
-
-| Band | Meaning |
-|:----:|---------|
-| 1st | First digit |
-| 2nd | Second digit |
-| 3rd | Multiplier (power of 10) |
-| 4th | Tolerance |
+**Bonus — what the dielectric is doing.** Inserting a dielectric *increases* capacitance. Why? The dielectric's molecules polarize and partially cancel the field, so the same stored charge produces a *lower* voltage. Since $C = q/V$, lower $V$ for the same $q$ means higher $C$.
 
 ---
 
-### 3.2 Capacitor
+## 4. Inductor: The Component That Fights Change (and Bites Back)
 
-A capacitor is a passive element that stores energy in an **electric field**. The simplest form is two parallel conducting plates separated by a dielectric. Opposite charges accumulate on the plates, creating a field that maintains a voltage difference. Unit: **farad (F)**.
+*In class:* $v = L di/dt$; an inductor stores energy in a magnetic field and stabilizes current.
 
-**The defining relationship — and where it comes from.**
-A capacitor's stored charge is proportional to the voltage across it, with capacitance $C$ as the constant:
+**The defining behavior — opposition to change (Lenz's law).** Run current through a coil and it builds a magnetic field. If you try to *change* that current, the changing field induces a voltage that **opposes the change** — fights a rising current, props up a falling one. That's why inductor current can't jump: a sudden change would need infinite voltage ($v = L di/dt$).
 
-$$q = C v$$
+**Where the energy lives, and how much.** Energy is stored in the magnetic field around the coil:
 
-Current is the rate at which charge flows ($i = dq/dt$). Differentiating $q = Cv$ (with $C$ constant):
+$$W = \int v i dt = \int \left(L\frac{di}{dt}\right) i dt = \int_0^I L i di = \tfrac{1}{2}LI^2$$
 
-$$i = \frac{dq}{dt} = \frac{d(Cv)}{dt} = C \frac{dv}{dt}$$
+**The part that's genuinely important and always rushed — back-EMF.** This is the inductor's "bite." Suppose current is flowing through a relay coil or a motor (both inductors) and you suddenly **open a switch**. You've just forced $di/dt$ to be enormous and negative in an instant. Through $v = L di/dt$, the inductor generates a huge voltage spike — often hundreds of volts from a 12 V circuit — trying to keep its current flowing. That spike will **arc across the switch contacts** or destroy a transistor driving the coil.
 
-So **the current through a capacitor is proportional to how *fast* its voltage changes** — not to the voltage itself.
+> 💡 **This is why you see a diode across every relay and motor coil.** That "flyback" or "freewheeling" diode gives the inductor's current a safe path to die down gradually instead of spiking. If you've ever wondered why a tiny diode sits backwards across a relay in every Arduino motor circuit — *this* is the reason. Most courses never have time to explain it.
 
-**Key behavior — blocks DC, passes AC.** This falls right out of the equation. At steady DC the voltage is constant, so $dv/dt = 0 \Rightarrow i = 0$: the capacitor acts like an **open circuit**. For a fast-changing AC signal, $dv/dt$ is large, so it readily passes current.
-
-> 💡 Capacitors are used to **control and stabilize voltage** in a circuit (they resist sudden voltage changes).
-
-> ⚠️ **Misconception — "current flows through a capacitor."**
-> Strictly, DC does **not** flow *through* a capacitor. Charge is *displaced* — pushed onto one plate and pulled off the other through the external circuit — building up the electric field. The charge movement in the surrounding wires is what we observe as "current."
+**Application — buck converter (12 V → 5 V).** A buck converter steps voltage down by switching the input on/off very fast. A bare switch would make the load current jolt up and down uselessly. The inductor's "current can't jump" property **smooths the pulses into a steady current**. (Full switching/duty-cycle analysis, $V_{out}=D V_{in}$, belongs to power electronics — here it's just inductor behavior in action.)
 
 ---
 
-### 3.3 Inductor
+## 5. Kirchhoff's Laws: They're Conservation Laws in Disguise
 
-An inductor is a passive element that stores energy in a **magnetic field**. In its simplest form it is a coil of wire. Unit of inductance: **henry (H)**.
+*In class:* KVL — voltages around a loop sum to 0; KCL — currents at a node sum to 0.
 
-**The governing principle — Faraday's law.** A *changing* magnetic field induces a voltage that **opposes the change in current** that created it. This "opposition to change" is the defining behavior of an inductor.
+**What they *really* are.** These aren't arbitrary circuit rules — they're two of the deepest laws in physics wearing circuit clothing:
 
-**The defining relationship — and where it comes from.**
-*Magnetic flux* (how much magnetic field passes through the coil) is proportional to the current, with inductance $L$ as the constant:
+- **KVL is energy conservation.** Voltage is energy per charge. Carry a charge once around a loop and back to its start, and it must have the same potential energy it began with — so the net energy gained and lost (rises and drops) cancels to zero.
+- **KCL is charge conservation.** Charge can't be created, destroyed, or piled up at a junction. So whatever flows into a node must flow out.
 
-$$\lambda = L i$$
+**The fine print nobody mentions — when they break.** KVL and KCL rely on the **lumped-element assumption**: that the circuit is small compared to the signal's wavelength, so a voltage or current is "the same value everywhere along a wire at one instant." This is true for almost everything you'll build. But at very high frequencies (GHz) or over long cables, signals take measurable *time* to travel down a wire, and the wire itself behaves like a distributed network. Then you need **transmission-line theory**, not plain KVL/KCL. Knowing *where* the simple laws stop applying is what separates a technician from an engineer.
 
-By Faraday's law the induced voltage equals the rate of change of flux:
-
-$$v = \frac{d\lambda}{dt} = \frac{d(Li)}{dt} = L \frac{di}{dt}$$
-
-So **the voltage across an inductor is proportional to how *fast* its current changes** — the mirror image of the capacitor.
-
-**Key behavior — resists sudden current changes.** Because $v = L di/dt$, forcing the current to change instantly would require infinite voltage. So inductor current **cannot jump** — it builds up gradually, at a rate set by $L$. *(The slide simulation shows this gradual current rise.)*
-
-> 💡 Inductors are used to **control and stabilize current** (e.g., the inductor in a buck converter stepping 12 V down to 5 V).
+**Why guessing the wrong current direction is harmless.** When you label a branch current $i$ with an arrow, $i$ is just an algebraic variable. The KVL/KCL equations are **linear** in these variables. If the true current actually runs opposite to your arrow, the algebra doesn't break — it simply solves to a **negative number**, which reads as "the real current is this big, in the direction opposite to my arrow." The sign carries the correction automatically. You never have to redo the problem; just keep your conventions consistent.
 
 ---
 
-### 3.4 Passive Components — Wrap-Up
+## 6. Series & Parallel: The Shortcuts, and Where They Fail
 
-Notice the **mirror symmetry** between capacitor and inductor: swap $v \leftrightarrow i$ and $C \leftrightarrow L$ and one equation becomes the other.
+*In class:* combine resistors/inductors by adding in series, capacitors by adding in parallel (and reciprocals for the other cases).
 
-| | Resistor | Capacitor | Inductor |
-|---|:---:|:---:|:---:|
-| **Role** | Dissipative element | Stores energy in an **electric** field | Stores energy in a **magnetic** field |
-| **_V_–_I_ relationship** | $V = IR$ | $i = C \dfrac{dv}{dt}$ | $v = L \dfrac{di}{dt}$ |
-| **At steady DC** | normal resistor | open circuit | short circuit |
-| **Stabilizes** | — | voltage | current |
+These rules come straight from the laws above. **Series** means one shared current; apply KVL. **Parallel** means one shared voltage; apply KCL.
 
----
-
-## 4. Kirchhoff's Laws
-
-Kirchhoff's laws are the foundation of **all** circuit analysis — from a single loop to transistor circuits, op-amps, and ICs with hundreds of elements. (Think of them as "Newton's laws for circuits.")
-
-### 4.1 Kirchhoff's Voltage Law (KVL)
-
-> **The sum of voltages around any closed loop equals zero.**
-
-$$\sum_{\text{loop}} V = 0$$
-
-The physical meaning: as you travel once around a closed loop and return to the start, you must be back at the same potential. So every voltage *rise* (from sources) is exactly cancelled by the voltage *drops* across the elements — **energy is conserved**.
-
-**How to apply it — the thinking flow:**
-
-1. **Assume a current direction** on each branch and draw an arrow. (Your guess does not have to be right — see §4.3.)
-2. **Assign voltage polarity** to each passive element, consistent with that arrow: the voltage *drops* in the direction the current flows (enter at **+**, leave at **−**).
-3. **Walk the loop, add up the voltages with their signs, set the total to 0**, then solve for the unknown.
-
-### 4.2 Kirchhoff's Current Law (KCL)
-
-> **The sum of all currents entering and leaving a node equals zero.**
-
-$$\sum_{\text{node}} I = 0$$
-
-The physical meaning: charge cannot pile up at a junction, so whatever flows *in* must flow *out*. **Convention:** currents *entering* a node are positive; currents *leaving* are negative (or vice versa — just stay consistent).
-
-### 4.3 You Can Guess Current Directions Freely
-
-When analyzing a circuit you **arbitrarily** choose current directions and draw arrows; the assumed voltage polarities just have to stay consistent with those arrows.
-
-> 💡 If your guess is wrong, you do **not** start over — the math simply returns a **negative value**, telling you the real current flows the other way. Consistent KVL/KCL gives the correct result no matter which direction you guessed.
-
----
-
-## 5. Series and Parallel Combinations
-
-This is where the element equations from §3 meet the laws from §4. Each result below is *derived*, not just stated — follow the logic, don't memorize the formula.
-
-### 5.1 Series — same current through every element
-
-In a series connection there is only one path, so the **same current** flows through every element.
-
-**Resistors (from KVL).** The source voltage is split across the two resistors:
-
-$$V = V_1 + V_2 = iR_1 + iR_2 = i (R_1 + R_2)
-\quad\Longrightarrow\quad \boxed{R_{eq} = R_1 + R_2}$$
-
-**Capacitors.** The same current means the **same charge $q$** accumulates on each capacitor. Each holds voltage $v = q/C$, and the voltages add:
-
-$$V = \frac{q}{C_1} + \frac{q}{C_2} = q\left(\frac{1}{C_1} + \frac{1}{C_2}\right)
-\quad\Longrightarrow\quad \boxed{\frac{1}{C_{eq}} = \frac{1}{C_1} + \frac{1}{C_2}}$$
-
-**Inductors.** The same current $i$ flows through both, so the voltages (each $L di/dt$) add:
-
-$$V = L_1\frac{di}{dt} + L_2\frac{di}{dt} = (L_1 + L_2)\frac{di}{dt}
-\quad\Longrightarrow\quad \boxed{L_{eq} = L_1 + L_2}$$
-
-### 5.2 Parallel — same voltage across every element
-
-In a parallel connection both elements connect to the same two nodes, so they share the **same voltage**.
-
-**Resistors (from KCL).** The total current splits between the two branches:
-
-$$i = i_1 + i_2 = \frac{V}{R_1} + \frac{V}{R_2} = V\left(\frac{1}{R_1} + \frac{1}{R_2}\right)
-\quad\Longrightarrow\quad \boxed{\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2}}$$
-
-**Capacitors.** Same voltage $V$, so each stores $q = CV$, and the charges add:
-
-$$q = C_1 V + C_2 V = (C_1 + C_2) V
-\quad\Longrightarrow\quad \boxed{C_{eq} = C_1 + C_2}$$
-
-**Inductors.** Same voltage $V$ across both; the branch currents add ($di/dt = V/L$ for each):
-
-$$\frac{di}{dt} = \frac{V}{L_1} + \frac{V}{L_2} = V\left(\frac{1}{L_1} + \frac{1}{L_2}\right)
-\quad\Longrightarrow\quad \boxed{\frac{1}{L_{eq}} = \frac{1}{L_1} + \frac{1}{L_2}}$$
-
-### 5.3 The Pattern
-
-> **Resistors and inductors** combine the same way — **add in series, reciprocal in parallel**.
-> **Capacitors are the opposite** — **reciprocal in series, add in parallel**.
-> The reason traces straight back to the element equations: $R$ and $L$ relate voltage to current the "same way round," while $C$ relates *charge* to voltage, flipping the roles.
-
-| | Series | Parallel |
+| | Series (shared current) | Parallel (shared voltage) |
 |---|:---:|:---:|
-| **R** | $R_1 + R_2$ | $\dfrac{1}{R_1}+\dfrac{1}{R_2}$ |
-| **L** | $L_1 + L_2$ | $\dfrac{1}{L_1}+\dfrac{1}{L_2}$ |
-| **C** | $\dfrac{1}{C_1}+\dfrac{1}{C_2}$ | $C_1 + C_2$ |
+| **R** | $R_1 + R_2$ | $\left(\tfrac{1}{R_1}+\tfrac{1}{R_2}\right)^{-1}$ |
+| **L** | $L_1 + L_2$ | $\left(\tfrac{1}{L_1}+\tfrac{1}{L_2}\right)^{-1}$ |
+| **C** | $\left(\tfrac{1}{C_1}+\tfrac{1}{C_2}\right)^{-1}$ | $C_1 + C_2$ |
+
+Capacitors look "backwards" because $C$ relates *charge* to voltage, flipping the roles that $R$ and $L$ play. (In series, capacitors share the same charge $q$; their voltages $q/C$ add — giving the reciprocal rule.)
+
+**Where the shortcut quietly fails — the engineer's footnote:**
+- **Inductors that "see" each other.** The series rule $L_{eq}=L_1+L_2$ assumes the two coils' magnetic fields don't interact. Place them close and their fields couple — **mutual inductance $M$** — and the real result becomes $L_1 + L_2 \pm 2M$. This is the basis of transformers, and a trap if you lay out coils carelessly.
+- **Real parts aren't pure.** A real resistor has a little parasitic inductance and capacitance; a real capacitor has series resistance and inductance (ESR/ESL). At low frequency these vanish and the simple rules hold. At high frequency a "resistor" can behave partly like an inductor. The ideal combination rules are a low-frequency approximation — excellent, but not eternal.
 
 ---
 
-## Key Takeaways
+## Key Takeaways (the deep version)
 
-- Circuit analysis reduces to finding $V$ and $I$; **each element defines its own _V_–_I_ relationship**.
-- Conventional current flows + → −, but **electrons move the other way**.
-- The element equations come from simple definitions: Ohm's law ($V=IR$), $q=Cv \Rightarrow i = C dv/dt$, and $\lambda = Li \Rightarrow v = L di/dt$.
-- A capacitor **blocks DC / passes AC** and **stabilizes voltage**; an inductor **resists sudden current changes** and **stabilizes current** — they are mirror images.
-- **KVL** (loop voltages sum to 0) and **KCL** (node currents sum to 0) plus the element equations let you derive *everything*, including the series/parallel rules.
-- Guessing a current direction wrong just gives a **negative answer** — not an error, as long as you stay consistent.
+- Electrons drift astonishingly slowly; it's the **field** that propagates near light speed.
+- $V=IR$ is an empirical approximation; real resistance is electron **scattering**, and it shifts with temperature.
+- A capacitor's "current" never crosses the gap — a changing **field** (displacement current) bridges it; energy $=\tfrac12 CV^2$.
+- An inductor **fights changes in its current** and **bites back** with a voltage spike when interrupted — hence the flyback diode; energy $=\tfrac12 LI^2$.
+- **KVL = energy conservation, KCL = charge conservation**; both rely on the lumped-element assumption and break down at high frequency.
+- A wrong direction guess self-corrects to a **negative sign** because the equations are linear.
+- Series/parallel rules are KVL/KCL shortcuts that assume **no coupling and ideal parts** — watch for mutual inductance and parasitics.
 
 ---
 
