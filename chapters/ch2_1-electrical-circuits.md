@@ -27,7 +27,7 @@ Analyzing a circuit ultimately comes down to finding two quantities: **voltage (
 The single idea that ties this whole chapter together:
 
 > **Every circuit element defines its own relationship between $V$ and $I$.**
-> The resistor, capacitor, and inductor each have a *different* $V$–$I$ relationship — and that relationship *is* what the element "is." Once you know an element's $V$–$I$ rule, you can plug it into Kirchhoff's laws and solve any circuit.
+> The resistor, capacitor, and inductor each have a *different* _V_–_I_ relationship — and that relationship *is* what the element "is." Once you know an element's _V_–_I_ rule, you can plug it into Kirchhoff's laws and solve any circuit.
 
 | Quantity | Symbol | Unit | Meaning |
 |----------|:------:|:----:|---------|
@@ -54,7 +54,7 @@ The single idea that ties this whole chapter together:
 
 ## 3. The Three Basic Passive Elements
 
-There are three basic **passive** elements, each defined by its own $V$–$I$ relationship:
+There are three basic **passive** elements, each defined by its own _V_–_I_ relationship:
 
 | Element | Symbol | Role | Energy |
 |---------|:------:|------|--------|
@@ -62,7 +62,7 @@ There are three basic **passive** elements, each defined by its own $V$–$I$ re
 | **Capacitor** | $C$ | Builds an **electric** field between plates | Stores |
 | **Inductor** | $L$ | Builds a **magnetic** field around a coil | Stores |
 
-The three sections below each follow the same pattern: *what it is → its $V$–$I$ relationship → where that relationship comes from.*
+The three sections below each follow the same pattern: *what it is → its _V_–_I_ relationship → where that relationship comes from.*
 
 ---
 
@@ -70,12 +70,12 @@ The three sections below each follow the same pattern: *what it is → its $V$�
 
 A resistor is a **dissipative** element that converts electrical energy into heat. Unit: ohm ($\Omega$).
 
-**Ohm's law** — the $V$–$I$ relationship of an ideal resistor:
+**Ohm's law** — the _V_–_I_ relationship of an ideal resistor:
 
 $$V = I R$$
 
 For an *ideal* resistor, $V$ and $I$ are perfectly **linear**: a straight line through the origin with slope $R$. Real resistors deviate from this — for example, resistance drifts with temperature, so the line bends at high power.
-*(See the "Real vs. Ideal" $V$–$I$ graph on the slides.)*
+*(See the "Real vs. Ideal" _V_–_I_ graph on the slides.)*
 
 **Resistivity — why resistance depends on the wire itself.** Resistance is not just a number you pick; it comes from material and geometry:
 
@@ -105,11 +105,11 @@ A capacitor is a passive element that stores energy in an **electric field**. Th
 **The defining relationship — and where it comes from.**
 A capacitor's stored charge is proportional to the voltage across it, with capacitance $C$ as the constant:
 
-$$q = C\,v$$
+$$q = C v$$
 
 Current is the rate at which charge flows ($i = dq/dt$). Differentiating $q = Cv$ (with $C$ constant):
 
-$$i = \frac{dq}{dt} = \frac{d(Cv)}{dt} = C\,\frac{dv}{dt}$$
+$$i = \frac{dq}{dt} = \frac{d(Cv)}{dt} = C \frac{dv}{dt}$$
 
 So **the current through a capacitor is proportional to how *fast* its voltage changes** — not to the voltage itself.
 
@@ -131,15 +131,15 @@ An inductor is a passive element that stores energy in a **magnetic field**. In 
 **The defining relationship — and where it comes from.**
 *Magnetic flux* (how much magnetic field passes through the coil) is proportional to the current, with inductance $L$ as the constant:
 
-$$\lambda = L\,i$$
+$$\lambda = L i$$
 
 By Faraday's law the induced voltage equals the rate of change of flux:
 
-$$v = \frac{d\lambda}{dt} = \frac{d(Li)}{dt} = L\,\frac{di}{dt}$$
+$$v = \frac{d\lambda}{dt} = \frac{d(Li)}{dt} = L \frac{di}{dt}$$
 
 So **the voltage across an inductor is proportional to how *fast* its current changes** — the mirror image of the capacitor.
 
-**Key behavior — resists sudden current changes.** Because $v = L\,di/dt$, forcing the current to change instantly would require infinite voltage. So inductor current **cannot jump** — it builds up gradually, at a rate set by $L$. *(The slide simulation shows this gradual current rise.)*
+**Key behavior — resists sudden current changes.** Because $v = L di/dt$, forcing the current to change instantly would require infinite voltage. So inductor current **cannot jump** — it builds up gradually, at a rate set by $L$. *(The slide simulation shows this gradual current rise.)*
 
 > 💡 Inductors are used to **control and stabilize current** (e.g., the inductor in a buck converter stepping 12 V down to 5 V).
 
@@ -152,7 +152,7 @@ Notice the **mirror symmetry** between capacitor and inductor: swap $v \leftrigh
 | | Resistor | Capacitor | Inductor |
 |---|:---:|:---:|:---:|
 | **Role** | Dissipative element | Stores energy in an **electric** field | Stores energy in a **magnetic** field |
-| **$V$–$I$ relationship** | $V = IR$ | $i = C\,\dfrac{dv}{dt}$ | $v = L\,\dfrac{di}{dt}$ |
+| **_V_–_I_ relationship** | $V = IR$ | $i = C \dfrac{dv}{dt}$ | $v = L \dfrac{di}{dt}$ |
 | **At steady DC** | normal resistor | open circuit | short circuit |
 | **Stabilizes** | — | voltage | current |
 
@@ -202,7 +202,7 @@ In a series connection there is only one path, so the **same current** flows thr
 
 **Resistors (from KVL).** The source voltage is split across the two resistors:
 
-$$V = V_1 + V_2 = iR_1 + iR_2 = i\,(R_1 + R_2)
+$$V = V_1 + V_2 = iR_1 + iR_2 = i (R_1 + R_2)
 \quad\Longrightarrow\quad \boxed{R_{eq} = R_1 + R_2}$$
 
 **Capacitors.** The same current means the **same charge $q$** accumulates on each capacitor. Each holds voltage $v = q/C$, and the voltages add:
@@ -210,7 +210,7 @@ $$V = V_1 + V_2 = iR_1 + iR_2 = i\,(R_1 + R_2)
 $$V = \frac{q}{C_1} + \frac{q}{C_2} = q\left(\frac{1}{C_1} + \frac{1}{C_2}\right)
 \quad\Longrightarrow\quad \boxed{\frac{1}{C_{eq}} = \frac{1}{C_1} + \frac{1}{C_2}}$$
 
-**Inductors.** The same current $i$ flows through both, so the voltages (each $L\,di/dt$) add:
+**Inductors.** The same current $i$ flows through both, so the voltages (each $L di/dt$) add:
 
 $$V = L_1\frac{di}{dt} + L_2\frac{di}{dt} = (L_1 + L_2)\frac{di}{dt}
 \quad\Longrightarrow\quad \boxed{L_{eq} = L_1 + L_2}$$
@@ -226,7 +226,7 @@ $$i = i_1 + i_2 = \frac{V}{R_1} + \frac{V}{R_2} = V\left(\frac{1}{R_1} + \frac{1
 
 **Capacitors.** Same voltage $V$, so each stores $q = CV$, and the charges add:
 
-$$q = C_1 V + C_2 V = (C_1 + C_2)\,V
+$$q = C_1 V + C_2 V = (C_1 + C_2) V
 \quad\Longrightarrow\quad \boxed{C_{eq} = C_1 + C_2}$$
 
 **Inductors.** Same voltage $V$ across both; the branch currents add ($di/dt = V/L$ for each):
@@ -250,9 +250,9 @@ $$\frac{di}{dt} = \frac{V}{L_1} + \frac{V}{L_2} = V\left(\frac{1}{L_1} + \frac{1
 
 ## Key Takeaways
 
-- Circuit analysis reduces to finding $V$ and $I$; **each element defines its own $V$–$I$ relationship**.
+- Circuit analysis reduces to finding $V$ and $I$; **each element defines its own _V_–_I_ relationship**.
 - Conventional current flows + → −, but **electrons move the other way**.
-- The element equations come from simple definitions: Ohm's law ($V=IR$), $q=Cv \Rightarrow i = C\,dv/dt$, and $\lambda = Li \Rightarrow v = L\,di/dt$.
+- The element equations come from simple definitions: Ohm's law ($V=IR$), $q=Cv \Rightarrow i = C dv/dt$, and $\lambda = Li \Rightarrow v = L di/dt$.
 - A capacitor **blocks DC / passes AC** and **stabilizes voltage**; an inductor **resists sudden current changes** and **stabilizes current** — they are mirror images.
 - **KVL** (loop voltages sum to 0) and **KCL** (node currents sum to 0) plus the element equations let you derive *everything*, including the series/parallel rules.
 - Guessing a current direction wrong just gives a **negative answer** — not an error, as long as you stay consistent.
