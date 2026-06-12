@@ -266,11 +266,21 @@ $$R_{24} = R_2 + R_4 = 2 + 4 = 6\ \text{k}\Omega$$
 
 $$R_{234} = R_{24}\parallel R_3 = \frac{R_{24}\cdot R_3}{R_{24}+R_3} = \frac{6\cdot 3}{6+3} = \frac{18}{9} = 2\ \text{k}\Omega$$
 
+<p align="center">
+  <img src="../figures/ch2/r.png" alt="Reducing R2, R4, R3 to R234" width="640">
+</p>
+<p align="center"><em>Reducing the top path: $R_2+R_4$ in series (6 kΩ), then in parallel with $R_3$ (3 kΩ) → $R_{234}=2$ kΩ.</em></p>
+
 **On the right, $R_5$ and $R_6$ are in parallel:**
 
 $$R_{56} = R_5\parallel R_6 = \frac{R_5\cdot R_6}{R_5+R_6} = \frac{5\cdot 6}{5+6} = \frac{30}{11}\approx 2.7\ \text{k}\Omega$$
 
 Now the whole circuit collapses into something simple: on the **left** a loop with $V_1$ (10 V) and $R_1$; across the **top** the block $R_{234}$ with $V_{out}$ on its right side; on the **right** the block $R_{56}$; and $V_2$ (20 V) closing the bottom. Two clean loops.
+
+<p align="center">
+  <img src="../figures/ch2/example2-circuit.svg" alt="Reduced circuit with Loop 1 and Loop 2" width="560">
+</p>
+<p align="center"><em>The circuit after reduction — Loop 1 (left) gives $I_{out}$; Loop 2 (right) gives the loop current and $V_{out}$.</em></p>
 
 ### Step 2 — Loop 1 (left loop) → $I_{out}$
 
