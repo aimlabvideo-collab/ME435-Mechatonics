@@ -1,0 +1,23 @@
+# --- Protect private / sensitive material from being pushed ---
+# Student records (FERPA), copyrighted textbook, exam & quiz answer keys.
+# These patterns are a safety net; the best protection is to simply not
+# copy these files into this folder.
+
+*Grade*
+*grade*
+*Solution*
+*solution*
+*answer*
+*Answer*
+*Exam*
+*Midterm*
+*Final*
+*Quiz*
+Textbook/
+Introduction-to-Mechatronics*.pdf
+
+# OS / editor junk
+.DS_Store
+__MACOSX/
+Thumbs.db
+*.asv

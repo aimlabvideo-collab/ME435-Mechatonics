@@ -1,0 +1,23 @@
+title: ME 435 — Mechatronics and Measurement Systems
+description: California State University, Northridge — ME 435 course page
+remote_theme: just-the-docs/just-the-docs
+
+# GitHub Pages site address (repo name: ME435-Mechatonics)
+url: https://aimlabvideo-collab.github.io
+baseurl: /ME435-Mechatonics
+
+# Enable the top search bar
+search_enabled: true
+
+# Top-right auxiliary link
+aux_links:
+  "GitHub":
+    - "https://github.com/aimlabvideo-collab/ME435-Mechatonics"
+
+aux_links_new_tab: true
+
+# Footer text
+footer_content: "ME 435 · California State University, Northridge · Maintained by the instructor."
+
+plugins:
+  - jekyll-remote-theme
