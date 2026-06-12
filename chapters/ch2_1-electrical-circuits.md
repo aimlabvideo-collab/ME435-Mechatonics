@@ -252,7 +252,7 @@ $$\frac{di}{dt} = \frac{V}{L_1} + \frac{V}{L_2} = V\left(\frac{1}{L_1} + \frac{1
 ## Solution — Take-Home Example 2
 
 **Problem.** Compute $V_{out}$ and $I_{out}$ for the circuit with
-$R_1=1,\ R_2=2,\ R_3=3,\ R_4=4,\ R_5=5,\ R_6=6\ \text{k}\Omega$, $V_1=10\ \text{V}$, $V_2=20\ \text{V}$.
+$R_1=1,\ R_2=2,\ R_3=3,\ R_4=4,\ R_5=5,\ R_6=6\ \text{k}\Omega$, $V_1=10\,\text{V}$, $V_2=20\,\text{V}$.
 
 We solve it the way we do in class: **shrink the resistor network step by step, redraw, then apply KVL loop by loop.**
 
@@ -266,17 +266,103 @@ $$R_{24} = R_2 + R_4 = 2 + 4 = 6\ \text{k}\Omega$$
 
 $$R_{234} = R_{24}\parallel R_3 = \frac{R_{24}\cdot R_3}{R_{24}+R_3} = \frac{6\cdot 3}{6+3} = \frac{18}{9} = 2\ \text{k}\Omega$$
 
+<div style="text-align:center;margin:1.4em 0;">
+<svg viewBox='0 0 660 200' xmlns='http://www.w3.org/2000/svg' style='width:100%;max-width:640px;height:auto;'>
+<rect width='660' height='200' fill='white'/>
+<line x1='20' y1='64' x2='20' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='170' y1='64' x2='170' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='20' cy='64' r='3.5' fill='#1a1a1a'/>
+<circle cx='170' cy='64' r='3.5' fill='#1a1a1a'/>
+<line x1='20' y1='64' x2='43' y2='64' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='43.0' y='54.0' width='44' height='20' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='87' y1='64' x2='103' y2='64' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='103.0' y='54.0' width='44' height='20' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='147' y1='64' x2='170' y2='64' stroke='#1a1a1a' stroke-width='2'/>
+<text x='65' y='51' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1a1a1a' font-weight='normal' font-style='normal'>R2 = 2k</text>
+<text x='125' y='51' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1a1a1a' font-weight='normal' font-style='normal'>R4 = 4k</text>
+<line x1='20' y1='124' x2='60' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='60.0' y='114.0' width='70' height='20' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='130' y1='124' x2='170' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<text x='95' y='146' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1a1a1a' font-weight='normal' font-style='normal'>R3 = 3kΩ</text>
+<text x='95' y='168' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#555' font-weight='normal' font-style='italic'>R2+R4 in series</text>
+<text x='195' y='96' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='24' fill='#555' font-weight='normal' font-style='normal'>⇒</text>
+<line x1='230' y1='64' x2='230' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='380' y1='64' x2='380' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='230' cy='64' r='3.5' fill='#1a1a1a'/>
+<circle cx='380' cy='64' r='3.5' fill='#1a1a1a'/>
+<line x1='230' y1='64' x2='270' y2='64' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='270.0' y='54.0' width='70' height='20' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='340' y1='64' x2='380' y2='64' stroke='#1a1a1a' stroke-width='2'/>
+<text x='305' y='51' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1a1a1a' font-weight='normal' font-style='normal'>R24 = 6kΩ</text>
+<line x1='230' y1='124' x2='270' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='270.0' y='114.0' width='70' height='20' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='340' y1='124' x2='380' y2='124' stroke='#1a1a1a' stroke-width='2'/>
+<text x='305' y='146' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1a1a1a' font-weight='normal' font-style='normal'>R3 = 3kΩ</text>
+<text x='305' y='168' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#555' font-weight='normal' font-style='italic'>then in parallel</text>
+<text x='405' y='96' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='24' fill='#555' font-weight='normal' font-style='normal'>⇒</text>
+<line x1='440' y1='94' x2='600' y2='94' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='440' cy='94' r='3.5' fill='#1a1a1a'/>
+<circle cx='600' cy='94' r='3.5' fill='#1a1a1a'/>
+<line x1='440' y1='94' x2='479' y2='94' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='479.0' y='82.0' width='82' height='24' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='561' y1='94' x2='600' y2='94' stroke='#1a1a1a' stroke-width='2'/>
+<text x='520' y='79' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='bold' font-style='normal'>R234 = 2 kΩ</text>
+<text x='520' y='168' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#555' font-weight='normal' font-style='italic'>6k || 3k = 2k</text>
+</svg>
+<div style="font-size:0.9em;color:#555;font-style:italic;margin-top:0.4em;">Reducing the R₂/R₃/R₄ network: R₂+R₄ in series, then in parallel with R₃, collapse to R₂₃₄ = 2 kΩ.</div>
+</div>
+
+
 **On the right, $R_5$ and $R_6$ are in parallel:**
 
 $$R_{56} = R_5\parallel R_6 = \frac{R_5\cdot R_6}{R_5+R_6} = \frac{5\cdot 6}{5+6} = \frac{30}{11}\approx 2.7\ \text{k}\Omega$$
 
 Now the whole circuit collapses into something simple: on the **left** a loop with $V_1$ (10 V) and $R_1$; across the **top** the block $R_{234}$ with $V_{out}$ on its right side; on the **right** the block $R_{56}$; and $V_2$ (20 V) closing the bottom. Two clean loops.
 
+
+<div style="text-align:center;margin:1.4em 0;">
+<svg viewBox='0 0 640 340' xmlns='http://www.w3.org/2000/svg' style='width:100%;max-width:560px;height:auto;'>
+<defs><marker id='ar' viewBox='0 0 10 10' refX='8' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#1a1a1a'/></marker><marker id='arb' viewBox='0 0 10 10' refX='6' refY='5' markerWidth='7' markerHeight='7' orient='auto'><path d='M0,0 L10,5 L0,10 z' fill='#1c6fd6'/></marker><marker id='arr' viewBox='0 0 10 10' refX='6' refY='5' markerWidth='7' markerHeight='7' orient='auto'><path d='M0,0 L10,5 L0,10 z' fill='#d63a3a'/></marker></defs>
+<rect width='640' height='340' fill='white'/>
+<line x1='200' y1='80' x2='293.0' y2='80' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='293.0' y='68.0' width='74' height='24' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='367.0' y1='80' x2='470' y2='80' stroke='#1a1a1a' stroke-width='2'/>
+<text x='330' y='65' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='normal' font-style='normal'>R234 = 2 kΩ</text>
+<line x1='120' y1='80' x2='200' y2='80' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='200' cy='80' r='3.5' fill='#1a1a1a'/>
+<line x1='120' y1='80' x2='120' y2='167.0' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='120' cy='185.0' r='18' fill='white' stroke='#1a1a1a' stroke-width='2'/><text x='120' y='180.0' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='16' fill='#1a1a1a' font-weight='normal' font-style='normal'>+</text><text x='120' y='201.0' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='16' fill='#1a1a1a' font-weight='normal' font-style='normal'>−</text>
+<line x1='120' y1='203.0' x2='120' y2='290' stroke='#1a1a1a' stroke-width='2'/>
+<text x='94' y='190.0' text-anchor='end' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='normal' font-style='normal'>V1 = 10 V</text>
+<line x1='200' y1='80' x2='200' y2='156.0' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='188.0' y='156.0' width='24' height='58' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<line x1='200' y1='214.0' x2='200' y2='290' stroke='#1a1a1a' stroke-width='2'/>
+<text x='222' y='190.0' text-anchor='start' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='normal' font-style='normal'>R1 = 1 kΩ</text>
+<line x1='158' y1='163.0' x2='158' y2='207.0' stroke='#1a1a1a' stroke-width='2' marker-end='url(#ar)'/>
+<text x='154' y='157.0' text-anchor='end' font-family='Helvetica, Arial, sans-serif' font-size='13' fill='#1a1a1a' font-weight='bold' font-style='normal'>Iout</text>
+<circle cx='470' cy='80' r='3.5' fill='#1a1a1a'/>
+<text x='480' y='71' text-anchor='start' font-family='Helvetica, Arial, sans-serif' font-size='15' fill='#d63a3a' font-weight='bold' font-style='normal'>Vout</text>
+<line x1='470' y1='80' x2='470' y2='121.0' stroke='#1a1a1a' stroke-width='2'/>
+<rect x='458.0' y='121.0' width='24' height='58' rx='3' fill='white' stroke='#1a1a1a' stroke-width='2'/>
+<text x='492' y='150' text-anchor='start' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='normal' font-style='normal'>R56 ≈ 2.7 kΩ</text>
+<line x1='470' y1='179.0' x2='470' y2='232' stroke='#1a1a1a' stroke-width='2'/>
+<circle cx='470' cy='250' r='18' fill='white' stroke='#1a1a1a' stroke-width='2'/><text x='470' y='245' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='16' fill='#1a1a1a' font-weight='normal' font-style='normal'>+</text><text x='470' y='266' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='16' fill='#1a1a1a' font-weight='normal' font-style='normal'>−</text>
+<line x1='470' y1='268' x2='470' y2='290' stroke='#1a1a1a' stroke-width='2'/>
+<text x='492' y='252' text-anchor='start' font-family='Helvetica, Arial, sans-serif' font-size='14' fill='#1a1a1a' font-weight='normal' font-style='normal'>V2 = 20 V</text>
+<line x1='120' y1='290' x2='470' y2='290' stroke='#1a1a1a' stroke-width='2'/>
+<path d='M 176 165.0 A 24 24 0 1 1 144 165.0' fill='none' stroke='#1c6fd6' stroke-width='2' marker-end='url(#arb)'/>
+<text x='160' y='191.0' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#1c6fd6' font-weight='bold' font-style='normal'>Loop 1</text>
+<path d='M 311 161 A 32 32 0 1 1 311 209' fill='none' stroke='#d63a3a' stroke-width='2' marker-end='url(#arr)'/>
+<text x='335' y='190' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='12' fill='#d63a3a' font-weight='bold' font-style='normal'>Loop 2</text>
+</svg>
+<div style="font-size:0.9em;color:#555;font-style:italic;margin-top:0.4em;">The circuit after reduction. <b>Loop 1</b> (left) gives I<sub>out</sub>; <b>Loop 2</b> (right) gives the loop current and V<sub>out</sub>.</div>
+</div>
+
 ### Step 2 — Loop 1 (left loop) → $I_{out}$
 
 The left loop is just $V_1$ driving $R_1$. KVL around it:
 
-$$\sum V = 0:\quad V_1 - I_1 R_1 = 0 \;\Rightarrow\; 10 = I_1\ (1000)$$
+$$\sum V = 0:\quad V_1 - I_1 R_1 = 0 \;\Rightarrow\; 10 = I_1\,(1000)$$
 
 $$\boxed{I_{out} = I_1 = \frac{10}{1000} = 0.01\ \text{A} = 10\ \text{mA}}$$
 
@@ -292,7 +378,7 @@ Replace each resistor voltage with Ohm's law ($V = I_{56}R$):
 
 $$10 - I_{56}R_{234} - I_{56}R_{56} - 20 = 0$$
 
-$$I_{56}\ (R_{234} + R_{56}) = -10 \;\Rightarrow\; I_{56} = \frac{-10}{2 + 2.7} = \frac{-10}{4.7\ \text{k}\Omega} \approx -2.1\ \text{mA}$$
+$$I_{56}\,(R_{234} + R_{56}) = -10 \;\Rightarrow\; I_{56} = \frac{-10}{2 + 2.7} = \frac{-10}{4.7\ \text{k}\Omega} \approx -2.1\ \text{mA}$$
 
 > ⚠️ **Notice the minus sign — this is the lesson from §4.3 in action.**
 > We *guessed* the current direction, and the negative result is the circuit telling us our guess was backwards: the real current flows the **other way**, with magnitude about 2.1 mA. We don't redo anything — the sign carries the correction. (This makes sense physically: the 20 V source is stronger than the 10 V source, so it pushes current "upstream" against our assumed arrow.)
@@ -305,7 +391,7 @@ $$V_{out} = 10 - V_{234} = 10 - I_{56}R_{234} = 10 - (-2.1\ \text{mA})(2\ \text{
 
 $$\boxed{V_{out} \approx 14.2\ \text{V}}$$
 
-*(Using the exact $R_{56} = \tfrac{30}{11}\ \text{k}\Omega$ instead of the rounded 2.7 gives $V_{out} = \tfrac{370}{26} = 14.23\ \text{V}$ — the small difference is just rounding.)*
+*(Using the exact $R_{56} = \tfrac{30}{11}\,\text{k}\Omega$ instead of the rounded 2.7 gives $V_{out} = \tfrac{370}{26} = 14.23\,\text{V}$ — the small difference is just rounding.)*
 
 ### The intuition
 
