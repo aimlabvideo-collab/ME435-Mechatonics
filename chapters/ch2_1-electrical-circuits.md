@@ -196,7 +196,7 @@ When analyzing a circuit you **arbitrarily** choose current directions and draw 
 
 This is where the element equations from §3 meet the laws from §4. Each result below is *derived*, not just stated — follow the logic, don't memorize the formula.
 
-### 5.1 Series — same current through every element
+### 5.1 Series — same current through every element (Solution of Take home example 1)
 
 In a series connection there is only one path, so the **same current** flows through every element.
 
@@ -215,7 +215,7 @@ $$V = \frac{q}{C_1} + \frac{q}{C_2} = q\left(\frac{1}{C_1} + \frac{1}{C_2}\right
 $$V = L_1\frac{di}{dt} + L_2\frac{di}{dt} = (L_1 + L_2)\frac{di}{dt}
 \quad\Longrightarrow\quad \boxed{L_{eq} = L_1 + L_2}$$
 
-### 5.2 Parallel — same voltage across every element
+### 5.2 Parallel — same voltage across every element (Solution of Take home example 1)
 
 In a parallel connection both elements connect to the same two nodes, so they share the **same voltage**.
 
@@ -245,6 +245,73 @@ $$\frac{di}{dt} = \frac{V}{L_1} + \frac{V}{L_2} = V\left(\frac{1}{L_1} + \frac{1
 | **R** | $R_1 + R_2$ | $\dfrac{1}{R_1}+\dfrac{1}{R_2}$ |
 | **L** | $L_1 + L_2$ | $\dfrac{1}{L_1}+\dfrac{1}{L_2}$ |
 | **C** | $\dfrac{1}{C_1}+\dfrac{1}{C_2}$ | $C_1 + C_2$ |
+
+
+---
+
+## Solution — Take-Home Example 2
+
+**Problem.** Compute $V_{out}$ and $I_{out}$ for the circuit with
+$R_1=1,\ R_2=2,\ R_3=3,\ R_4=4,\ R_5=5,\ R_6=6\ \text{k}\Omega$, $V_1=10\ \text{V}$, $V_2=20\ \text{V}$.
+
+### Step 0 — Read the circuit
+
+Label three useful nodes (all voltages referenced to ground):
+
+- **Node A** — top of $R_1$, bottom of $R_2$, left end of $R_3$, and the **+** terminal of $V_1$. $I_{out}$ is the current leaving node A to the left, into $R_1$.
+- **Node B** — right end of $R_3$, bottom of $R_4$, tops of $R_5$ and $R_6$. This is the **output node**, so $V_{out}=V_B$.
+- **Rail D** — bottoms of $R_5$ and $R_6$, tied to the **+** terminal of $V_2$.
+
+The two sources are *ideal*, so they pin their nodes regardless of the rest of the circuit:
+
+$$V_A = V_1 = 10\ \text{V}, \qquad V_D = V_2 = 20\ \text{V}$$
+
+### Step 1 — $I_{out}$ comes for free
+
+$R_1$ sits directly between node A (10 V) and ground, in parallel with the ideal source $V_1$. So its current is fixed by $V_1$ alone:
+
+$$\boxed{I_{out} = \frac{V_1}{R_1} = \frac{10\ \text{V}}{1\ \text{k}\Omega} = 10\ \text{mA}}$$
+
+(Because $R_1$ is in parallel with an ideal source, it draws this current independently of everything else — the rest of the network doesn't change it.)
+
+### Step 2 — Reduce the network to find $V_{out}$
+
+Everything else lives between the two fixed nodes A (10 V) and D (20 V), with the output node B in the middle.
+
+**Between A and B** there are two parallel paths:
+
+- the top path $R_2$ then $R_4$ in series: $R_2+R_4 = 2+4 = 6\ \text{k}\Omega$
+- the direct path $R_3 = 3\ \text{k}\Omega$
+
+$$R_{AB} = (R_2+R_4)\parallel R_3 = \frac{6\cdot 3}{6+3} = 2\ \text{k}\Omega$$
+
+**Between B and D**, $R_5$ and $R_6$ share the same two nodes (parallel):
+
+$$R_{BD} = R_5\parallel R_6 = \frac{5\cdot 6}{5+6} = \frac{30}{11}\approx 2.73\ \text{k}\Omega$$
+
+### Step 3 — Node B is a divider between two sources
+
+Node B is fed only from A (through $R_{AB}$) and from D (through $R_{BD}$). KCL at B says the current in from one side equals the current out the other:
+
+$$\frac{V_B - V_A}{R_{AB}} + \frac{V_B - V_D}{R_{BD}} = 0$$
+
+Solving for $V_B$ gives the two-source (conductance-weighted) divider:
+
+$$V_{out}=V_B=\frac{\dfrac{V_A}{R_{AB}}+\dfrac{V_D}{R_{BD}}}{\dfrac{1}{R_{AB}}+\dfrac{1}{R_{BD}}}
+=\frac{\dfrac{10}{2}+\dfrac{20}{30/11}}{\dfrac{1}{2}+\dfrac{11}{30}}
+=\frac{5+\tfrac{220}{30}}{\tfrac{26}{30}}=\frac{370}{26}$$
+
+$$\boxed{V_{out}\approx 14.23\ \text{V}}$$
+
+### Step 4 — Sanity check (current directions)
+
+Since $V_D=20\ \text{V} > V_{out}=14.23\ \text{V} > V_A=10\ \text{V}$, current flows **from D, into node B, then out to A** — the higher source pushes toward the lower one. The branch current is
+
+$$I = \frac{V_D-V_B}{R_{BD}} = \frac{20-14.23}{30/11}\ \text{k}\Omega \approx 2.12\ \text{mA},$$
+
+and the same 2.12 mA leaves B toward A through $R_{AB}$, so KCL at B balances. ✓
+
+> **Takeaway.** When an ideal source sits directly across a node, it *fixes* that node's voltage — use that to decouple the problem (here $I_{out}$ fell out immediately). What's left is almost always a series/parallel reduction plus one divider step.
 
 ---
 
