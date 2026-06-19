@@ -107,6 +107,41 @@ $$Z = R + jX$$
 
 The key idea (slide "Finding impedance"): **the basic _V_–_I_ relationships of R, C, and L do not change.** They are still $v=iR$, $i=C\,dv/dt$, $v=L\,di/dt$. All we do is *substitute the exponential (phasor) form* of the signal into each law and read off the ratio $Z = \mathbf{V}/\mathbf{I}$. Each derivation below does exactly that, step by step.
 
+### 4.0 You Already Know Impedance — From Vibrations
+
+Before any circuit math, here is the most important thing for a mechanical engineer to realize: **impedance is not an electrical idea. It is a universal one, and you already own it from your dynamics and vibrations courses.**
+
+Picture pushing a **mass–spring–damper** by hand. How hard you have to push for a given motion depends on **how fast you push** — i.e. on frequency:
+
+- **Push slowly** (low frequency) → the **spring** fights you. Most of your force goes into stretching it; inertia barely matters.
+- **Push quickly** (high frequency) → the **mass (inertia)** fights you. Most of your force goes into accelerating it back and forth; the spring barely matters.
+- **The damper** fights you the same amount regardless of speed — it just resists motion and burns energy as heat.
+
+That "force-you-need vs. how-fast-you-push, as a function of frequency" *is* **mechanical impedance**, $Z_\text{mech} = F/v$. Electrical impedance is the exact same idea with $V/I$ instead of $F/v$. The two are not a loose metaphor — they are the **same equations** with the symbols renamed:
+
+| Mechanical world | Governing law | Mechanical impedance $Z=F/v$ | $\;\longleftrightarrow\;$ | Circuit element | Impedance $Z=V/I$ |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Mass** $m$ (inertia) | $F = m\dfrac{dv}{dt}$ | $j\omega m$ | ↔ | **Inductor** $L$ | $j\omega L$ |
+| **Spring** $k$ (stores energy) | $F = k\!\int\! v\,dt$ | $\dfrac{k}{j\omega}$ | ↔ | **Capacitor** $C$ | $\dfrac{1}{j\omega C}$ |
+| **Damper** $c$ (dissipates) | $F = c\,v$ | $c$ | ↔ | **Resistor** $R$ | $R$ |
+
+Read the dictionary across: **force ↔ voltage**, **velocity ↔ current**, and then
+
+$$\text{mass } m \;\leftrightarrow\; \text{inductance } L, \qquad
+\text{compliance } \tfrac{1}{k} \;\leftrightarrow\; \text{capacitance } C, \qquad
+\text{damping } c \;\leftrightarrow\; \text{resistance } R.$$
+
+> 💡 **Why the mass ↔ inductor match is exact, not poetic.** Newton's law $F = m\,dv/dt$ and the inductor law $V = L\,di/dt$ are the *same equation*. Substitute the phasor form (just like §4.2) and the mass gives $Z = j\omega m$, identical in structure to $Z_L = j\omega L$. A mass "resists changes in velocity" exactly as an inductor "resists changes in current" — both store kinetic/magnetic energy and refuse to let their state jump. This is why a flywheel is the honest mechanical picture of an inductor.
+
+**The frequency intuition carries straight over** — and it explains §4.5 before we even get there:
+
+| You push… | Mechanical: what fights back | Electrical: what has high $Z$ |
+|---|---|---|
+| **Slowly** (low $\omega$) | the **spring** ($Z=k/\omega$ is large) | the **capacitor** ($Z=1/\omega C$ is large) |
+| **Quickly** (high $\omega$) | the **mass** ($Z=\omega m$ is large) | the **inductor** ($Z=\omega L$ is large) |
+
+So when the next sections say "the capacitor blocks low frequencies" and "the inductor blocks high frequencies," you can *feel* why: it is the same reason a spring dominates a slow push and inertia dominates a fast one. **Impedance is a concept that runs across mechanical, electrical, acoustic, and thermal systems alike — and as an ME, you are holding the mechanical version already.**
+
 ### 4.1 Resistor — $Z_R = R$
 
 Ohm's law has no derivative, so nothing changes:
@@ -293,6 +328,7 @@ Impedance is the gateway to the rest of the course:
 
 ## Key Takeaways
 
+- **Impedance is universal, not just electrical.** A mass–spring–damper has a *mechanical* impedance $F/v$ that you already understand: mass ↔ inductor, spring ↔ capacitor, damper ↔ resistor. Slow push → spring dominates (like a capacitor); fast push → inertia dominates (like an inductor).
 - AC makes the $d/dt$ terms in the element laws *active*, so KVL/KCL become differential equations — **impedance turns them back into algebra**.
 - A **phasor** stores a sinusoid's amplitude and phase as one complex number; this works because every signal shares the same frequency $\omega$.
 - The master trick is $\dfrac{d}{dt}\to j\omega$. Applying it to the Chapter 2.1 laws gives $Z_R = R$, $Z_L = j\omega L$, $Z_C = 1/j\omega C$.
