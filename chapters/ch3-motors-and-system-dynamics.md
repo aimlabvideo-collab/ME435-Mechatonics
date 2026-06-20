@@ -406,6 +406,6 @@ xlabel('Time (s)'); ylabel('\omega (rad/s)');
 ## Course Materials
 
 - 📊 Slides: Chapter 3-1 — Motor and System Dynamics; Chapter 3-2 — DC Motor Simulation with MATLAB
-- 💻 MATLAB simulation: [Chapter 3 code](../simulation/chapter3/)
+- 💻 MATLAB simulation: [Chapter 3 code on GitHub](https://github.com/aimlabvideo-collab/ME435-Mechatonics/tree/main/simulation/chapter3) — DC motor step response (`ode45`). The folder's README explains how to run it and how to clone the code.
 - 📒 Prerequisites: [Chapter 2.1 — Electrical Circuits and Components](ch2_1-electrical-circuits.md) (KVL, R/L/C elements) · [Chapter 2.2 — AC Circuits and Impedance](ch2_2-ac-circuit-and-impedance.md) (the mass↔inductor, damper↔resistor analogy)
 - 🎥 Background: `ode45` tutorial — youtube.com/watch?v=-DmTK868J4A
