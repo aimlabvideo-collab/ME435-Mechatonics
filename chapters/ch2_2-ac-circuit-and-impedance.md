@@ -23,7 +23,7 @@ By the end of this chapter you should be able to:
 
 ## 1. Why AC Needs New Tools
 
-In Chapter 2.1 every source was DC — constant in time — so a single number described each voltage and current. The element equations told us that a capacitor and inductor only *react* when things change ($i = C\,dv/dt$, $v = L\,di/dt$). Under steady DC nothing changes, so they sit there as an open or a short.
+In Chapter 2.1 every source was DC — constant in time — so a single number described each voltage and current. The element equations told us that a capacitor and inductor only *react* when things change ($i = C dv/dt$, $v = L di/dt$). Under steady DC nothing changes, so they sit there as an open or a short.
 
 **AC is the opposite world: everything is changing, all the time.** Now those $dv/dt$ and $di/dt$ terms are alive, and the capacitor and inductor become the interesting part of the circuit.
 
@@ -56,7 +56,7 @@ The three numbers that *fully* define a sinusoid (at a fixed, known frequency) a
 
 A **phasor** represents a sinusoid as a single complex number holding its amplitude and phase:
 
-$$v(t) = V_m\cos(\omega t + \phi) \quad\longleftrightarrow\quad \mathbf{V} = V_m\,e^{j\phi} = V_m\angle\phi$$
+$$v(t) = V_m\cos(\omega t + \phi) \quad\longleftrightarrow\quad \mathbf{V} = V_m e^{j\phi} = V_m\angle\phi$$
 
 This works because of **Euler's formula**, the bridge between rotating exponentials and sinusoids:
 
@@ -71,13 +71,13 @@ Read $V_m e^{j(\omega t+\phi)}$ as a vector of length $V_m$ spinning counter-clo
 
 Here is the payoff that makes phasors worth learning. Differentiate the rotating exponential:
 
-$$\frac{d}{dt}\Big(V_m e^{j(\omega t + \phi)}\Big) = j\omega\,V_m e^{j(\omega t + \phi)}$$
+$$\frac{d}{dt}\Big(V_m e^{j(\omega t + \phi)}\Big) = j\omega V_m e^{j(\omega t + \phi)}$$
 
 **Taking a time-derivative is identical to multiplying by $j\omega$.** That single fact collapses the element laws' calculus into multiplication:
 
 $$\boxed{\frac{d}{dt} \;\longrightarrow\; j\omega}$$
 
-Every $dv/dt$ and $di/dt$ from Chapter 2.1 becomes "$\times\,j\omega$," and the differential equations become ordinary algebra. That algebra is what we call impedance.
+Every $dv/dt$ and $di/dt$ from Chapter 2.1 becomes "$\times j\omega$," and the differential equations become ordinary algebra. That algebra is what we call impedance.
 
 > 💡 **The recipe we'll use in §4.** To find any element's impedance: (1) write the signal in exponential form, $V_m e^{j(\omega t+\phi)}$ or $I_m e^{j(\omega t+\phi)}$; (2) substitute it into that element's _V_–_I_ law from Chapter 2.1; (3) differentiate — each $\dfrac{d}{dt}$ just drops a factor of $j\omega$; (4) read off $Z = \mathbf{V}/\mathbf{I}$. That's the entire derivation, three times over.
 
@@ -96,7 +96,7 @@ The sign of $\phi$ tells you *when* a wave peaks relative to the reference:
 
 **Impedance $Z$** is the AC generalization of resistance — the ratio of the voltage phasor to the current phasor:
 
-$$\boxed{\mathbf{V} = \mathbf{I}\,Z} \qquad Z = \frac{\mathbf{V}}{\mathbf{I}}$$
+$$\boxed{\mathbf{V} = \mathbf{I} Z} \qquad Z = \frac{\mathbf{V}}{\mathbf{I}}$$
 
 Impedance is a **complex number**, measured in ohms ($\Omega$), with two parts:
 
@@ -105,7 +105,7 @@ $$Z = R + jX$$
 - $R$ — **resistance** (the real part): energy *dissipated*.
 - $X$ — **reactance** (the imaginary part): energy *stored and returned* by capacitors/inductors. It is the reactance that creates the phase shift between voltage and current.
 
-The key idea (slide "Finding impedance"): **the basic _V_–_I_ relationships of R, C, and L do not change.** They are still $v=iR$, $i=C\,dv/dt$, $v=L\,di/dt$. All we do is *substitute the exponential (phasor) form* of the signal into each law and read off the ratio $Z = \mathbf{V}/\mathbf{I}$. Each derivation below does exactly that, step by step.
+The key idea (slide "Finding impedance"): **the basic _V_–_I_ relationships of R, C, and L do not change.** They are still $v=iR$, $i=C dv/dt$, $v=L di/dt$. All we do is *substitute the exponential (phasor) form* of the signal into each law and read off the ratio $Z = \mathbf{V}/\mathbf{I}$. Each derivation below does exactly that, step by step.
 
 ### 4.0 You Already Know Impedance — From Vibrations
 
@@ -122,8 +122,8 @@ That "force-you-need vs. how-fast-you-push, as a function of frequency" *is* **m
 | Mechanical world | Governing law | Mechanical impedance $Z=F/v$ | $\;\longleftrightarrow\;$ | Circuit element | Impedance $Z=V/I$ |
 |---|:---:|:---:|:---:|:---:|:---:|
 | **Mass** $m$ (inertia) | $F = m\dfrac{dv}{dt}$ | $j\omega m$ | ↔ | **Inductor** $L$ | $j\omega L$ |
-| **Spring** $k$ (stores energy) | $F = k\!\int\! v\,dt$ | $\dfrac{k}{j\omega}$ | ↔ | **Capacitor** $C$ | $\dfrac{1}{j\omega C}$ |
-| **Damper** $c$ (dissipates) | $F = c\,v$ | $c$ | ↔ | **Resistor** $R$ | $R$ |
+| **Spring** $k$ (stores energy) | $F = k\int v dt$ | $\dfrac{k}{j\omega}$ | ↔ | **Capacitor** $C$ | $\dfrac{1}{j\omega C}$ |
+| **Damper** $c$ (dissipates) | $F = c v$ | $c$ | ↔ | **Resistor** $R$ | $R$ |
 
 Read the dictionary across: **force ↔ voltage**, **velocity ↔ current**, and then
 
@@ -131,7 +131,7 @@ $$\text{mass } m \;\leftrightarrow\; \text{inductance } L, \qquad
 \text{compliance } \tfrac{1}{k} \;\leftrightarrow\; \text{capacitance } C, \qquad
 \text{damping } c \;\leftrightarrow\; \text{resistance } R.$$
 
-> 💡 **Why the mass ↔ inductor match is exact, not poetic.** Newton's law $F = m\,dv/dt$ and the inductor law $V = L\,di/dt$ are the *same equation*. Substitute the phasor form (just like §4.2) and the mass gives $Z = j\omega m$, identical in structure to $Z_L = j\omega L$. A mass "resists changes in velocity" exactly as an inductor "resists changes in current" — both store kinetic/magnetic energy and refuse to let their state jump. This is why a flywheel is the honest mechanical picture of an inductor.
+> 💡 **Why the mass ↔ inductor match is exact, not poetic.** Newton's law $F = m dv/dt$ and the inductor law $V = L di/dt$ are the *same equation*. Substitute the phasor form (just like §4.2) and the mass gives $Z = j\omega m$, identical in structure to $Z_L = j\omega L$. A mass "resists changes in velocity" exactly as an inductor "resists changes in current" — both store kinetic/magnetic energy and refuse to let their state jump. This is why a flywheel is the honest mechanical picture of an inductor.
 
 **The frequency intuition carries straight over** — and it explains §4.5 before we even get there:
 
@@ -156,19 +156,19 @@ Start from the inductor law and substitute the exponential form of the current, 
 
 $$v = L\frac{di}{dt}
 \;\longrightarrow\;
-\mathbf{V} = L\,\frac{d}{dt}\Big(I_m e^{j(\omega t + \phi)}\Big)$$
+\mathbf{V} = L \frac{d}{dt}\Big(I_m e^{j(\omega t + \phi)}\Big)$$
 
 Differentiating the exponential brings down a factor of $j\omega$ (this is the $\frac{d}{dt}\to j\omega$ rule in action):
 
-$$\mathbf{V} = L\,(j\omega)\,I_m e^{j(\omega t + \phi)} = j\omega L\,\underbrace{I_m e^{j(\omega t + \phi)}}_{=\;\mathbf{I}} = j\omega L\,\mathbf{I}$$
+$$\mathbf{V} = L (j\omega) I_m e^{j(\omega t + \phi)} = j\omega L \underbrace{I_m e^{j(\omega t + \phi)}}_{=\;\mathbf{I}} = j\omega L \mathbf{I}$$
 
-Compare this with $\mathbf{V} = Z_L\,\mathbf{I}$ and read off the impedance:
+Compare this with $\mathbf{V} = Z_L \mathbf{I}$ and read off the impedance:
 
 $$\boxed{Z_L = j\omega L}$$
 
 Purely imaginary and **positive**. In polar form,
 
-$$Z_L = j\omega L = \omega L\,\angle\,90^\circ$$
+$$Z_L = j\omega L = \omega L \angle 90^\circ$$
 
 - **Voltage leads current by $90^\circ$.** The $+j$ is a $+90^\circ$ rotation: the inductor's voltage peaks a quarter-cycle *before* its current does. (Physically: voltage must build *first* to drive the current up.)
 - **Magnitude $|Z_L| = \omega L$ grows linearly with frequency** — quantified next in §4.4.
@@ -179,17 +179,17 @@ Same procedure, now substituting the exponential form of the *voltage*, $v = V_m
 
 $$i = C\frac{dv}{dt}
 \;\longrightarrow\;
-\mathbf{I} = C\,\frac{d}{dt}\Big(V_m e^{j(\omega t + \phi)}\Big) = C\,(j\omega)\,V_m e^{j(\omega t + \phi)} = j\omega C\,\mathbf{V}$$
+\mathbf{I} = C \frac{d}{dt}\Big(V_m e^{j(\omega t + \phi)}\Big) = C (j\omega) V_m e^{j(\omega t + \phi)} = j\omega C \mathbf{V}$$
 
 Solve for the voltage-to-current ratio:
 
-$$\mathbf{V} = \frac{1}{j\omega C}\,\mathbf{I} = Z_C\,\mathbf{I}
+$$\mathbf{V} = \frac{1}{j\omega C} \mathbf{I} = Z_C \mathbf{I}
 \;\Rightarrow\;
-\boxed{Z_C = \frac{1}{j\omega C} = -\,\frac{1}{\omega C}\,j}$$
+\boxed{Z_C = \frac{1}{j\omega C} = - \frac{1}{\omega C} j}$$
 
 (The sign flip uses $\dfrac{1}{j} = -j$.) Purely imaginary and **negative** — the mirror image of the inductor. In polar form,
 
-$$Z_C = \frac{1}{\omega C}\,\angle\,-90^\circ$$
+$$Z_C = \frac{1}{\omega C} \angle -90^\circ$$
 
 - **Current leads voltage by $90^\circ$.** The $-j$ is a $-90^\circ$ rotation on the voltage. (Physically: charge must flow *first* before the voltage across the plates can build.)
 - **Magnitude $|Z_C| = \dfrac{1}{\omega C}$ shrinks with frequency** — the opposite of the inductor.
@@ -203,8 +203,8 @@ $$Z_C = \frac{1}{\omega C}\,\angle\,-90^\circ$$
 | Element | _V_–_I_ law (Ch 2.1) | Impedance $Z$ | At DC ($\omega\to 0$) | At high $\omega$ | Phase (V relative to I) |
 |---------|:---:|:---:|:---:|:---:|:---:|
 | **Resistor** | $v = iR$ | $R$ | $R$ | $R$ | in phase ($0^\circ$) |
-| **Inductor** | $v = L\,di/dt$ | $j\omega L$ | short (0) | open ($\infty$) | leads by $90^\circ$ |
-| **Capacitor** | $i = C\,dv/dt$ | $1/j\omega C$ | open ($\infty$) | short (0) | lags by $90^\circ$ |
+| **Inductor** | $v = L di/dt$ | $j\omega L$ | short (0) | open ($\infty$) | leads by $90^\circ$ |
+| **Capacitor** | $i = C dv/dt$ | $1/j\omega C$ | open ($\infty$) | short (0) | lags by $90^\circ$ |
 
 Notice the same **mirror symmetry** as Chapter 2.1: swap $L\leftrightarrow C$ and the inductor and capacitor behaviors trade places.
 
@@ -259,11 +259,11 @@ The only new wrinkle is that the arithmetic is now with **complex numbers**, so 
 
 Any impedance $Z = R + jX$ can be read in **polar form**:
 
-$$|Z| = \sqrt{R^2 + X^2}, \qquad \theta = \tan^{-1}\!\frac{X}{R}$$
+$$|Z| = \sqrt{R^2 + X^2}, \qquad \theta = \tan^{-1}\frac{X}{R}$$
 
 These two numbers are exactly what you measure:
 
-- $|Z|$ — the **ratio of voltage amplitude to current amplitude**: $V_m = |Z|\,I_m$.
+- $|Z|$ — the **ratio of voltage amplitude to current amplitude**: $V_m = |Z| I_m$.
 - $\theta$ — the **phase angle between voltage and current**. Positive $\theta$ (inductive) → voltage leads; negative $\theta$ (capacitive) → voltage lags.
 
 ---
@@ -278,18 +278,18 @@ We solve it the way we do in class: **write each impedance, combine, then apply 
 
 $$Z_R = R = 1000\ \Omega$$
 
-$$Z_C = \frac{1}{j\omega C} = \frac{1}{j\,(1000)(10^{-6})} = \frac{1}{j\,(10^{-3})} = -j\,1000\ \Omega$$
+$$Z_C = \frac{1}{j\omega C} = \frac{1}{j (1000)(10^{-6})} = \frac{1}{j (10^{-3})} = -j 1000\ \Omega$$
 
 So here the resistor and capacitor happen to have **equal-magnitude** impedances (1 kΩ each).
 
 ### Step 2 — Combine (series → add)
 
-$$Z_{eq} = Z_R + Z_C = 1000 - j\,1000\ \Omega$$
+$$Z_{eq} = Z_R + Z_C = 1000 - j 1000\ \Omega$$
 
 In polar form:
 
 $$|Z_{eq}| = \sqrt{1000^2 + 1000^2} = 1000\sqrt{2} \approx 1414\ \Omega, \qquad
-\theta = \tan^{-1}\!\frac{-1000}{1000} = -45^\circ$$
+\theta = \tan^{-1}\frac{-1000}{1000} = -45^\circ$$
 
 ### Step 3 — Current (Ohm's law, $\mathbf{I} = \mathbf{V}/Z$)
 
@@ -303,9 +303,9 @@ So the current is $i(t) = 7.07\cos(\omega t + 45^\circ)$ mA.
 
 ### Step 4 — Voltage across each element
 
-$$\mathbf{V}_R = \mathbf{I}\,Z_R = (7.07\angle 45^\circ\ \text{mA})(1000\angle 0^\circ) = 7.07\angle 45^\circ\ \text{V}$$
+$$\mathbf{V}_R = \mathbf{I} Z_R = (7.07\angle 45^\circ\ \text{mA})(1000\angle 0^\circ) = 7.07\angle 45^\circ\ \text{V}$$
 
-$$\mathbf{V}_C = \mathbf{I}\,Z_C = (7.07\angle 45^\circ\ \text{mA})(1000\angle{-90^\circ}) = 7.07\angle{-45^\circ}\ \text{V}$$
+$$\mathbf{V}_C = \mathbf{I} Z_C = (7.07\angle 45^\circ\ \text{mA})(1000\angle{-90^\circ}) = 7.07\angle{-45^\circ}\ \text{V}$$
 
 ### The intuition
 
