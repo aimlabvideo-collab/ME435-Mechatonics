@@ -15,6 +15,7 @@ By the end of this chapter you should be able to:
 
 - Explain what an **actuator** is and why DC motors dominate modern mechatronics.
 - Describe the **working principle** of a DC motor — magnetic attraction/repulsion, the right-hand rule, and the job of the **commutator** — and contrast **brushed vs. brushless (BLDC)**, **servo vs. stepper**, and **radial vs. axial flux** motors.
+- Explain how a **BLDC commutates electronically**: how three **Hall sensors** encode rotor position as a **3-bit code**, and how that code selects which two of the three **U-V-W phases** to energize in **six-step commutation**.
 - **Select a motor** for an application: read a spec sheet, use the torque/speed constants, and stay inside the torque–speed curve.
 - Derive the **two coupled equations** of a DC motor — the **armature circuit** (KVL) and the **rotational dynamics** (Newton) — and identify the **back-EMF** that links them.
 - Classify a system as **zero-, first-, or second-order**, and write the time response of each (time constant $\tau$; the three damping cases).
@@ -88,6 +89,35 @@ Every DC motor needs commutation — the question is *how it's done.*
 | Wear | brushes wear out (friction, sparking) | no brushes → long life, less maintenance |
 
 In a BLDC the controller energizes stator coils in sequence to create a **rotating magnetic field** that the permanent-magnet rotor follows — the same idea as an AC motor, but with the rotating field *actively generated and timed electronically* rather than coming from an AC line. This is why a BLDC needs a controller to spin at all: there is no mechanical commutator to do the timing.
+
+#### 3.1.1 How a BLDC Knows *When* to Switch — Hall Sensors and 3-Phase Commutation
+
+> 🖱️ **Interactive demo — open this and play with it as you read:** [**BLDC Hall-sensor commutation (live)**](https://aimlabvideo-collab.github.io/ME435-Mechatonics/simulation/chapter3/BLDC_Hall_3Phases/bldc_hall_demo.html). Spin the rotor (drag it, or hit play) and watch the three Hall sensors turn the rotor's position into a 3-bit code, and the code pick which two of the three phases (**U V W**) get energized. Everything in this section is something you can *see move* on that page.
+
+The brushed motor solved "when to flip the current" mechanically — the commutator is a rotary switch bolted to the shaft, so it is *automatically* synchronized to rotor position (§2.2). A BLDC throws that switch away. So it faces a new problem:
+
+> **The BLDC's core problem:** with no commutator, the controller must **independently know where the rotor is** before it can decide which coils to energize. Energize the wrong coils and you push the rotor toward a pole it's already near — no torque, or worse, backwards. *Commutation now depends on sensing position.*
+
+**The sensor: three Hall-effect switches.** A **Hall sensor** outputs a voltage when a magnetic field passes it; as a digital switch it reads **1** near a magnet's **N** pole and **0** near its **S** pole. Mount **three** of them around the stator, spaced **120° apart** (electrically). As the permanent-magnet rotor turns, each sensor sees N then S then N… and toggles between 1 and 0. Read all three together and you get a **3-bit code** `A B C`.
+
+**Why three bits give exactly six steps.** Three bits can express $2^3 = 8$ patterns, but two of them — `000` and `111` — can never occur, because the three sensors are spread 120° apart and can't all see the same pole at once. That leaves **six valid codes**. Each one is unique to a **60° slice** of one electrical revolution:
+
+| Hall code `A B C` | Commutation step | Stator-field direction it commands |
+|:---:|:---:|:---:|
+| `0 1 1` | 1 | 0° |
+| `0 0 1` | 2 | 60° |
+| `1 0 1` | 3 | 120° |
+| `1 0 0` | 4 | 180° |
+| `1 1 0` | 5 | 240° |
+| `0 1 0` | 6 | 300° |
+
+> 💡 **The code *is* a coarse position encoder.** Three cheap digital sensors don't tell you the angle exactly — they tell you which of six 60° sectors the rotor is in. That is *just enough* to know which way to push. The rotor walks through the six codes in a fixed cyclic order; run them backwards and the motor spins the other way. (Watch the rolling 3-channel trace at the bottom of the demo — those are the three Hall lines as square waves, 120° out of phase, exactly like the slides.)
+
+**The action: 6-step commutation of the U-V-W phases.** A BLDC stator has **three phase windings — U, V, and W**. For each Hall code the controller energizes **two** of them (current in through one, out through another) and lets the **third float** (off). That two-phase pair produces a stator magnetic field pointed in one of six directions — the "field direction" column above. The controller always aims that field about **90° ahead of the rotor**, so the rotor is forever *chasing* a target that just jumped ahead — the same "make a magnet chase a magnet" trick from §2.1, now done by transistors instead of brushes.
+
+> 💡 **Six discrete kicks, one smooth spin.** Each time the rotor crosses into a new 60° sector, the Hall code flips one bit, the controller switches to the next phase pair, and the stator field jumps 60°. Six jumps = one electrical revolution. The field moves in steps; the rotor, carried by its inertia, glides through smoothly. This stepped, two-phases-on pattern is called **six-step (trapezoidal) commutation** — the most common way to drive a BLDC.
+
+> ⚠️ **This is electronic commutation, full stop.** Everything the brushes did mechanically — sense position, reverse current at the right instant, keep torque in one direction — is now done in software/transistors: *Hall sensors sense → controller decodes the 3-bit code → it switches the U/V/W phase pair.* No contact, no sparking, no wear (§3.1). The cost is that a BLDC **cannot spin without its controller and a position signal** — which is exactly what the live demo lets you feel by scrubbing the rotor by hand.
 
 ### 3.2 Servo vs. Stepper — Position Control
 
@@ -394,7 +424,7 @@ xlabel('Time (s)'); ylabel('\omega (rad/s)');
 
 - An **actuator** makes a system act; **DC motors** are the workhorse electrical actuator. *Code can't fix a bad motor choice* — selection comes first.
 - A motor spins because the **commutator keeps flipping the rotor's magnetic poles** (via current reversal, set by the right-hand rule), so the rotor is always chasing a target that just moved.
-- **Brushed** = mechanical commutation (brushes wear); **BLDC** = electronic commutation (a controller makes a rotating field). **Servo** = position by pulse *width*; **stepper** = position by pulse *count*.
+- **Brushed** = mechanical commutation (brushes wear); **BLDC** = electronic commutation (a controller makes a rotating field). In a BLDC, three **Hall sensors** encode rotor position as a **3-bit code** (six valid states = six 60° sectors), and each code selects which two of the **U-V-W** phases to energize — **six-step commutation**. See the [live Hall-commutation demo](https://aimlabvideo-collab.github.io/ME435-Mechatonics/simulation/chapter3/BLDC_Hall_3Phases/bldc_hall_demo.html). **Servo** = position by pulse *width*; **stepper** = position by pulse *count*.
 - **Select** a motor by defining the application, picking a type, then reading the spec sheet. Use $\tau = K_t I$ and $\omega = K_v V$, and stay inside the **torque–speed curve**; respect continuous limits (current is worst at **stall**).
 - A DC motor is **two coupled equations**: the armature circuit $v_a = R_a i_a + L_a di_a/dt + K_e\omega$ (KVL) and the rotation $J d\omega/dt + b\omega = K_t i_a - \tau_L$ (Newton). **Back-EMF** $K_e\omega$ is the coupling that self-regulates speed; $K_t = K_e$ in SI units.
 - Classify systems by order: **first-order** has one time constant $\tau$ (63% in one $\tau$); **second-order** behavior is decided by the **discriminant** of its characteristic equation — over-, critically, or under-damped.
@@ -406,6 +436,7 @@ xlabel('Time (s)'); ylabel('\omega (rad/s)');
 ## Course Materials
 
 - 📊 Slides: Chapter 3-1 — Motor and System Dynamics; Chapter 3-2 — DC Motor Simulation with MATLAB
+- 🖱️ Live demo: [**BLDC Hall-sensor commutation**](https://aimlabvideo-collab.github.io/ME435-Mechatonics/simulation/chapter3/BLDC_Hall_3Phases/bldc_hall_demo.html) — an interactive page (no install) where you spin the rotor and watch the three Hall sensors form a 3-bit code that drives the U-V-W phases (§3.1.1).
 - 💻 MATLAB simulation: [Chapter 3 code on GitHub](https://github.com/aimlabvideo-collab/ME435-Mechatonics/tree/main/simulation/chapter3) — DC motor step response (`ode45`). The folder's README explains how to run it and how to clone the code.
 - 📒 Prerequisites: [Chapter 2.1 — Electrical Circuits and Components](ch2_1-electrical-circuits.md) (KVL, R/L/C elements) · [Chapter 2.2 — AC Circuits and Impedance](ch2_2-ac-circuit-and-impedance.md) (the mass↔inductor, damper↔resistor analogy)
 - 🎥 Background: `ode45` tutorial — youtube.com/watch?v=-DmTK868J4A

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLDC Hall-Sensor Commutation — Live Demo</title>
+<style>
+  :root{
+    --bg:#0E1116; --panel:#161B22; --panel2:#1C232D; --line:#2A323D;
+    --ink:#E8ECF2; --muted:#8B95A5;
+    --A:#2E8BE6; --B:#19B58C; --C:#8E84F0;
+    --hi:#F2A623; --n:#E2503F; --s:#3B8BD4; --field:#58C26A;
+    --mono:"SFMono-Regular",ui-monospace,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    display:flex; flex-direction:column; min-height:100%;
+  }
+  header{padding:14px 22px 6px; display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+  header h1{font-size:21px; font-weight:600; margin:0; letter-spacing:.2px}
+  header .sub{color:var(--muted); font-size:14px}
+  main{flex:1; display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:18px; padding:6px 22px 0; align-items:start}
+  .stage{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px; display:flex; justify-content:center}
+  #motor{width:100%; max-width:560px; height:auto; touch-action:none; cursor:grab}
+  #motor:active{cursor:grabbing}
+  .side{display:flex; flex-direction:column; gap:14px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px}
+  .card .lab{color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1.4px; margin-bottom:10px}
+  .code{font-family:var(--mono); font-size:74px; font-weight:600; line-height:1; letter-spacing:6px; text-align:center}
+  .code .a{color:var(--A)} .code .b{color:var(--B)} .code .c{color:var(--C)}
+  .bits{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:14px}
+  .bit{border-radius:10px; padding:10px 4px; text-align:center; background:var(--panel2); border:1px solid var(--line)}
+  .bit .nm{font-size:13px; color:var(--muted)}
+  .bit .v{font-family:var(--mono); font-size:30px; font-weight:600; line-height:1.1}
+  .bit.on{box-shadow:inset 0 0 0 2px currentColor}
+  .bit.A{color:var(--A)} .bit.B{color:var(--B)} .bit.C{color:var(--C)}
+  .bit .v{color:var(--ink)}
+  .bit.on .v{color:currentColor}
+  .rows{display:flex; flex-direction:column; gap:9px}
+  .row{display:flex; justify-content:space-between; align-items:center; font-size:15px}
+  .row .k{color:var(--muted)}
+  .row .val{font-family:var(--mono); font-size:16px}
+  .pill{display:inline-block; padding:2px 9px; border-radius:999px; font-family:var(--mono); font-size:14px;
+        background:rgba(242,166,35,.14); color:var(--hi); border:1px solid rgba(242,166,35,.4)}
+  .scopewrap{margin:16px 22px 4px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px 14px}
+  .scopewrap .lab{color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1.4px; margin-bottom:6px}
+  #scope{width:100%; height:130px; display:block}
+  .controls{display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px 22px 20px}
+  button{font:inherit; font-size:15px; color:var(--ink); background:var(--panel2); border:1px solid var(--line);
+         border-radius:10px; padding:9px 16px; cursor:pointer}
+  button:hover{border-color:#3a4654}
+  button.primary{background:var(--hi); color:#241700; border-color:var(--hi); font-weight:600}
+  .ctl{display:flex; align-items:center; gap:9px; color:var(--muted); font-size:14px}
+  input[type=range]{width:160px; accent-color:var(--hi)}
+  .switch{display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:var(--ink); font-size:15px}
+  .switch input{width:18px; height:18px; accent-color:var(--field)}
+  .hint{color:var(--muted); font-size:13px}
+  @media (max-width:880px){ main{grid-template-columns:1fr} .side{flex-direction:row; flex-wrap:wrap} .card{flex:1 1 240px} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>BLDC Hall-sensor commutation</h1>
+    <span class="sub">Spin the rotor and watch three Hall sensors encode its position as a 3-bit code.</span>
+  </header>
+
+  <main>
+    <div class="stage"><canvas id="motor" width="560" height="560" aria-label="Animated BLDC motor cross-section"></canvas></div>
+    <div class="side">
+      <div class="card">
+        <div class="lab">Hall code (A B C)</div>
+        <div class="code"><span id="dA" class="a">1</span><span id="dB" class="b">0</span><span id="dC" class="c">0</span></div>
+        <div class="bits">
+          <div id="bA" class="bit A"><div class="nm">Hall A</div><div class="v">1</div></div>
+          <div id="bB" class="bit B"><div class="nm">Hall B</div><div class="v">0</div></div>
+          <div id="bC" class="bit C"><div class="nm">Hall C</div><div class="v">0</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lab">Readout</div>
+        <div class="rows">
+          <div class="row"><span class="k">Rotor angle</span><span class="val" id="rAng">90°</span></div>
+          <div class="row"><span class="k">Electrical sector</span><span class="val" id="rSec">60–120°</span></div>
+          <div class="row"><span class="k">Energized poles</span><span class="pill" id="rDrive">U→N · V→S</span></div>
+          <div class="row"><span class="k">Field step</span><span class="val" id="rStep">2 / 6</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="scopewrap">
+    <div class="lab">Hall outputs over time (rolling)</div>
+    <canvas id="scope" width="1100" height="130"></canvas>
+  </div>
+
+  <div class="controls">
+    <button id="play" class="primary">Pause</button>
+    <button id="step">Step ▸ next sector</button>
+    <div class="ctl">Speed <input id="speed" type="range" min="2" max="240" value="26"><span class="val" id="rpm" style="font-family:var(--mono);width:64px">26 rpm</span></div>
+    <div class="ctl">Angle <input id="angle" type="range" min="0" max="359" value="90"></div>
+    <label class="switch"><input id="drive" type="checkbox" checked> Show drive field</label>
+    <span class="hint">Drag the rotor in the circle to scrub. Space = play/pause.</span>
+  </div>
+
+<script>
+(()=>{
+  const TAU=Math.PI*2, D2R=Math.PI/180;
+  const cv=document.getElementById('motor'), ctx=cv.getContext('2d');
+  const sc=document.getElementById('scope'), sx=sc.getContext('2d');
+
+  // --- geometry (math degrees, CCW, 90 = up) ---
+  const SENS=[{n:'A',a:90,c:'#2E8BE6'},{n:'B',a:210,c:'#19B58C'},{n:'C',a:330,c:'#8E84F0'}];
+  const COIL=[{n:'U',a:30},{n:'V',a:150},{n:'W',a:270}];
+  // code -> stator field angle (leads rotor ~90deg, quantized to 6 steps)
+  const FIELD={'101':120,'100':180,'110':240,'010':300,'011':0,'001':60};
+  const STEP ={'101':1,'100':2,'110':3,'010':4,'011':5,'001':6};
+
+  let theta=90;            // rotor electrical angle (deg)
+  let running=true, dragging=false, showDrive=true;
+  let rpm=26;              // electrical rpm
+  let last=performance.now();
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ running=false; document.getElementById('play').textContent='Play'; }
+
+  function bits(t){
+    return SENS.map(s => Math.cos((t - s.a)*D2R) > 0 ? 1 : 0);
+  }
+  function codeStr(t){ const b=bits(t); return ''+b[0]+b[1]+b[2]; }
+  function sectorRange(t){ const k=Math.floor(((t%360)+360)%360/60); return [k*60,(k+1)*60]; }
+
+  // drive: two phases with largest |cos(field-coil)| are energized
+  function driveState(field){
+    const arr=COIL.map(c=>({n:c.n,a:c.a,x:Math.cos((field-c.a)*D2R)}));
+    const sorted=[...arr].sort((p,q)=>Math.abs(q.x)-Math.abs(p.x));
+    const on=new Map(); on.set(sorted[0].n, sorted[0].x>0?'+':'-'); on.set(sorted[1].n, sorted[1].x>0?'+':'-');
+    return {on, floatN:sorted[2].n, arr};
+  }
+
+  // ---- main motor drawing ----
+  function P(cx,cy,a,r){ return [cx+r*Math.cos(a*D2R), cy-r*Math.sin(a*D2R)]; }
+
+  function drawMotor(){
+    const W=cv.width, H=cv.height, cx=W/2, cy=H/2;
+    ctx.clearRect(0,0,W,H);
+    const R_rotor=W*0.155, R_coil=W*0.235, R_sens=W*0.315, R_band_i=W*0.345, R_band_o=W*0.455, R_lab=(R_band_i+R_band_o)/2;
+
+    const code=codeStr(theta), field=FIELD[code];
+    const drive=driveState(field);
+    const [s0,s1]=sectorRange(theta);
+
+    // sector ring (6 wedges, codes)
+    const codesByMid=['101','100','110','010','011','001']; // mids 30,90,150,210,270,330
+    for(let i=0;i<6;i++){
+      const a0=i*60, a1=a0+60, mid=a0+30;
+      const active=(a0===s0);
+      ctx.beginPath();
+      const [ix0,iy0]=P(cx,cy,a0,R_band_i);
+      ctx.moveTo(ix0,iy0);
+      for(let a=a0;a<=a1;a+=3){ const[px,py]=P(cx,cy,a,R_band_o); ctx.lineTo(px,py);} 
+      for(let a=a1;a>=a0;a-=3){ const[px,py]=P(cx,cy,a,R_band_i); ctx.lineTo(px,py);} 
+      ctx.closePath();
+      ctx.fillStyle= active ? 'rgba(242,166,35,.22)' : 'rgba(255,255,255,.035)';
+      ctx.fill();
+      ctx.lineWidth=1; ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.stroke();
+      // code label
+      const [lx,ly]=P(cx,cy,mid,R_lab);
+      ctx.font='600 '+(W*0.038)+'px '+getComputedStyle(document.body).getPropertyValue('--mono');
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle= active ? '#F2A623' : 'rgba(232,236,242,.55)';
+      ctx.fillText(codesByMid[i], lx, ly);
+    }
+
+    // stator outline
+    ctx.beginPath(); ctx.arc(cx,cy,R_coil+W*0.03,0,TAU);
+    ctx.lineWidth=1.5; ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.stroke();
+
+    // coils U/V/W -> each energized tooth becomes an N or S electromagnet.
+    // '+' coil sits along the green stator-field arrow -> it is the S pole the rotor's N chases.
+    // '-' coil is opposite -> N pole. (Same colour language as the rotor: red = N, blue = S.)
+    COIL.forEach(c=>{
+      const [x,y]=P(cx,cy,c.a,R_coil);
+      const sgn=showDrive? drive.on.get(c.n):undefined;
+      const pole = sgn==='+' ? 'S' : (sgn==='-' ? 'N' : null);
+      let fill='rgba(255,255,255,.06)', ring='rgba(255,255,255,.18)', txt='rgba(232,236,242,.7)';
+      if(pole==='N'){ fill='rgba(226,80,63,.88)'; ring='#E2503F'; txt='#fff'; }
+      else if(pole==='S'){ fill='rgba(59,139,212,.88)'; ring='#3B8BD4'; txt='#fff'; }
+      const rad=W*0.052;
+      ctx.beginPath(); ctx.arc(x,y,rad,0,TAU); ctx.fillStyle=fill; ctx.fill();
+      ctx.lineWidth=2; ctx.strokeStyle=ring; ctx.stroke();
+      ctx.fillStyle=txt; ctx.textAlign='center'; ctx.textBaseline='middle';
+      if(pole){
+        ctx.font='600 '+(W*0.030)+'px system-ui'; ctx.fillText(c.n, x, y-rad*0.40);
+        ctx.font='700 '+(W*0.052)+'px system-ui'; ctx.fillText(pole, x, y+rad*0.28);
+      } else {
+        ctx.font='600 '+(W*0.044)+'px system-ui'; ctx.fillText(c.n, x, y);
+      }
+    });
+
+    // stator field arrow (green)
+    if(showDrive){
+      const [fx,fy]=P(cx,cy,field,R_coil*0.92);
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(fx,fy);
+      ctx.lineWidth=W*0.014; ctx.strokeStyle='rgba(88,194,106,.9)'; ctx.lineCap='round'; ctx.stroke();
+      // head
+      const ah=W*0.045;
+      ctx.save(); ctx.translate(fx,fy); ctx.rotate(-field*D2R);
+      ctx.beginPath(); ctx.moveTo(ah,0); ctx.lineTo(-ah*0.4,ah*0.55); ctx.lineTo(-ah*0.4,-ah*0.55); ctx.closePath();
+      ctx.fillStyle='#58C26A'; ctx.fill(); ctx.restore();
+    }
+
+    // Hall sensors A/B/C
+    const b=bits(theta);
+    SENS.forEach((s,i)=>{
+      const [x,y]=P(cx,cy,s.a,R_sens);
+      const on=b[i]===1;
+      ctx.beginPath(); ctx.arc(x,y,W*0.040,0,TAU);
+      ctx.fillStyle= on ? s.c : 'rgba(20,26,34,.9)';
+      ctx.fill();
+      ctx.lineWidth=2.5; ctx.strokeStyle=s.c; ctx.stroke();
+      ctx.fillStyle= on ? '#fff' : s.c; ctx.font='600 '+(W*0.034)+'px system-ui';
+      ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(s.n, x, y);
+      // tiny bit value below the sensor
+      const [tx,ty]=P(cx,cy,s.a,R_sens+W*0.062);
+      ctx.fillStyle= on ? s.c : 'rgba(139,149,165,.8)';
+      ctx.font='600 '+(W*0.030)+'px '+getComputedStyle(document.body).getPropertyValue('--mono');
+      ctx.fillText(b[i], tx, ty);
+    });
+
+    // rotor (N red / S blue needle)
+    const [nx,ny]=P(cx,cy,theta,R_rotor);
+    const [sx2,sy2]=P(cx,cy,theta+180,R_rotor);
+    ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(nx,ny); ctx.lineWidth=W*0.03; ctx.strokeStyle='#E2503F'; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(sx2,sy2); ctx.lineWidth=W*0.03; ctx.strokeStyle='#3B8BD4'; ctx.stroke();
+    // N marker
+    ctx.fillStyle='#fff'; ctx.font='700 '+(W*0.034)+'px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    const [Nx,Ny]=P(cx,cy,theta,R_rotor*0.62); ctx.fillText('N',Nx,Ny);
+    // hub
+    ctx.beginPath(); ctx.arc(cx,cy,W*0.028,0,TAU); ctx.fillStyle='#0E1116'; ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.stroke();
+
+    updateReadouts(code,field,drive,s0,s1,b);
+  }
+
+  function updateReadouts(code,field,drive,s0,s1,b){
+    document.getElementById('dA').textContent=code[0];
+    document.getElementById('dB').textContent=code[1];
+    document.getElementById('dC').textContent=code[2];
+    const ids=['A','B','C'];
+    ids.forEach((id,i)=>{
+      const el=document.getElementById('b'+id);
+      el.querySelector('.v').textContent=b[i];
+      el.classList.toggle('on', b[i]===1);
+    });
+    document.getElementById('rAng').textContent=Math.round(((theta%360)+360)%360)+'°';
+    document.getElementById('rSec').textContent=s0+'–'+s1+'°';
+    // drive text
+    const ordered=[];
+    drive.on.forEach((sgn,n)=>ordered.push({n, pole: sgn==='+'?'S':'N'}));
+    ordered.sort((p,q)=> (p.pole==='N'?-1:1) - (q.pole==='N'?-1:1));
+    document.getElementById('rDrive').textContent = ordered.map(o=>o.n+'→'+o.pole).join(' · ');
+    document.getElementById('rStep').textContent = STEP[code]+' / 6';
+    document.getElementById('angle').value=Math.round(((theta%360)+360)%360);
+  }
+
+  // ---- rolling scope ----
+  const hist=[]; const HISTMAX=240;
+  function pushHist(){ const b=bits(theta); hist.push(b); if(hist.length>HISTMAX) hist.shift(); }
+  function drawScope(){
+    const W=sc.width,H=sc.height; sx.clearRect(0,0,W,H);
+    const lanes=[{n:'A',c:'#2E8BE6'},{n:'B',c:'#19B58C'},{n:'C',c:'#8E84F0'}];
+    const padL=44, laneH=(H-16)/3;
+    lanes.forEach((ln,li)=>{
+      const yTop=8+li*laneH, yHi=yTop+laneH*0.28, yLo=yTop+laneH*0.78;
+      sx.fillStyle=ln.c; sx.font='600 14px '+getComputedStyle(document.body).getPropertyValue('--mono');
+      sx.textAlign='left'; sx.textBaseline='middle'; sx.fillText(ln.n, 12, (yHi+yLo)/2);
+      sx.strokeStyle='rgba(255,255,255,.08)'; sx.lineWidth=1;
+      sx.beginPath(); sx.moveTo(padL,yLo); sx.lineTo(W-8,yLo); sx.stroke();
+      sx.strokeStyle=ln.c; sx.lineWidth=2.5; sx.beginPath();
+      const n=hist.length; if(n<2){return;}
+      const step=(W-8-padL)/(HISTMAX-1);
+      for(let i=0;i<n;i++){
+        const v=hist[i][li]; const x=padL+i*step; const y=v?yHi:yLo;
+        if(i===0){ sx.moveTo(x,y); } else { const pv=hist[i-1][li]; if(pv!==v){ sx.lineTo(x, pv?yHi:yLo); } sx.lineTo(x,y); }
+      }
+      sx.stroke();
+    });
+  }
+
+  function frame(now){
+    const dt=(now-last)/1000; last=now;
+    if(running && !dragging){ theta=(theta + rpm*6*dt)%360; }
+    drawMotor(); drawScope();
+    requestAnimationFrame(frame);
+  }
+  // sample history on a timer so spacing is time-based, not frame-based
+  setInterval(()=>{ if(running||dragging) pushHist(); }, 60);
+
+  // ---- controls ----
+  const playBtn=document.getElementById('play');
+  playBtn.onclick=()=>{ running=!running; playBtn.textContent=running?'Pause':'Play'; last=performance.now(); };
+  document.getElementById('step').onclick=()=>{
+    const cur=Math.floor(((theta%360)+360)%360/60);
+    theta=((cur+1)*60+30)%360; running=false; playBtn.textContent='Play';
+  };
+  const speed=document.getElementById('speed'), rpmL=document.getElementById('rpm');
+  speed.oninput=()=>{ rpm=+speed.value; rpmL.textContent=rpm+' rpm'; };
+  const angle=document.getElementById('angle');
+  angle.oninput=()=>{ theta=+angle.value; running=false; playBtn.textContent='Play'; };
+  document.getElementById('drive').onchange=e=>{ showDrive=e.target.checked; };
+
+  // drag rotor to scrub
+  function angleFromEvent(ev){
+    const r=cv.getBoundingClientRect();
+    const px=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+    const py=(ev.touches?ev.touches[0].clientY:ev.clientY)-r.top;
+    const cx=r.width/2, cy=r.height/2;
+    let a=Math.atan2(-(py-cy), px-cx)/D2R; if(a<0)a+=360; return a;
+  }
+  function startDrag(ev){ dragging=true; theta=angleFromEvent(ev); ev.preventDefault(); }
+  function moveDrag(ev){ if(dragging){ theta=angleFromEvent(ev); ev.preventDefault(); } }
+  function endDrag(){ dragging=false; }
+  cv.addEventListener('mousedown',startDrag); window.addEventListener('mousemove',moveDrag); window.addEventListener('mouseup',endDrag);
+  cv.addEventListener('touchstart',startDrag,{passive:false}); cv.addEventListener('touchmove',moveDrag,{passive:false}); cv.addEventListener('touchend',endDrag);
+
+  window.addEventListener('keydown',e=>{
+    if(e.code==='Space'){ e.preventDefault(); playBtn.click(); }
+    else if(e.code==='ArrowRight'){ theta=(theta+2)%360; running=false; playBtn.textContent='Play'; }
+    else if(e.code==='ArrowLeft'){ theta=(theta-2+360)%360; running=false; playBtn.textContent='Play'; }
+  });
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

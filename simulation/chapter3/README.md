@@ -9,6 +9,7 @@ coupled electrical + mechanical model derived in Chapter 3.
 |------|---------|
 | `dc_motor_sim.m` | Main script — set the parameters, run `ode45`, plot current and speed. |
 | `dc_motor_ode.m` | The two coupled state equations (called by the solver). |
+| [`BLDC_Hall_3Phases/`](BLDC_Hall_3Phases/) | Interactive **BLDC Hall-sensor commutation** demo (browser-only). [Open it live.](https://aimlabvideo-collab.github.io/ME435-Mechatonics/simulation/chapter3/BLDC_Hall_3Phases/bldc_hall_demo.html) |
 
 ## What it does
 
