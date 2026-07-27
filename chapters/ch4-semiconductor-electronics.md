@@ -102,6 +102,12 @@ $$\boxed{E = \frac{F}{q}}$$
 
 By convention the field points **from + toward −**, so a positive charge is pushed along the field and a **negative** charge (an electron) is pushed **against** it. Keep this direction rule in mind — every diode and transistor below is really a story about *which way the field pushes electrons and holes.*
 
+> **Group challenge (from the slides):** *In the field below, can the negative charge move from the **A side** to the **B side**?*
+
+![Electric-field lines of a dipole — a − sphere on the B side and a + sphere toward the A side. A negative test charge on the A side is pushed left along the red arrow, toward the + region.](../figures/ch4/electric-field-dipole.png)
+
+**Yes.** The field lines run **from + to −**, and a negative charge feels a force *opposite* to the field — so it is pulled toward the **+** region, i.e., from the **A side toward the B side** (the red arrow). This is exactly why a bias voltage can *drive* carriers through a semiconductor: the field sets the direction, **electrons move against it** and **holes move with it.** Every diode and transistor below is an application of this one rule.
+
 **Why silicon?** Common semiconductors are **silicon (Si)** and **germanium (Ge)**. Silicon dominates for two reasons the slides stress:
 
 - **Economics** — silicon comes from sand (silica), which is absurdly cheap and abundant.
