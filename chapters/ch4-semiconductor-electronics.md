@@ -35,6 +35,10 @@ Look at the **H-bridge**, the circuit that drives a DC motor forward and backwar
 | Q1 + Q4 | left → right | spins one way |
 | Q2 + Q3 | right → left | spins the other way |
 
+![H-bridge current direction: with Q1 + Q4 ON current flows left-to-right through the motor (forward); with Q2 + Q3 ON it flows right-to-left (reverse).](../figures/ch4/h-bridge-direction.png)
+
+> *The diagonal pair that closes sets the current direction through the motor — and thus which way it spins. The other two switches stay open (dashed). By the end of this chapter we'll know exactly what **Q1–Q4** are: MOSFETs (§8).*
+
 Each switch **Q1–Q4 is a transistor** — an electronic switch built from semiconductor material, with **no moving parts**. This is the whole reason for the chapter:
 
 > **The thesis of Chapter 4:** to control a motor (or *any* actuator), we must control **electrons**. The device that lets a small electrical signal control a large flow of electrons — with no mechanical contact — is the **semiconductor switch**. Master the semiconductor and you can build every switch, amplifier, sensor interface, and logic gate in the rest of the course.
