@@ -5,6 +5,7 @@ MATLAB code used in lecture, organized by chapter.
 | Folder | Topic |
 |--------|-------|
 | [`chapter3/`](chapter3/) | DC motor step response (state-space, `ode45`) |
+| [`chapter4/`](chapter4/) | Low pass filtering of a noisy signal (`pspectrum`, `butter`, `filtfilt`) |
 
 Each chapter folder has its own README with details and how to run it.
 
